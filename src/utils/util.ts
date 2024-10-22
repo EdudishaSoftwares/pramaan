@@ -1,28 +1,4 @@
-/**
- * All your utils should stay here
- * Your util function should be pure!
- * i.e they should accept some argument, and then return some result without any side-effect
- * Further, they are not allowed to call any other functions
- */
-
-import randomize from 'randomatic';
-import { redis, service_name } from '@config';
-const pawan = require('pawan');
-
-const port = redis.port,
-  serviceName = service_name,
-  password = redis.password,
-  host = redis.host;
-
-export const {
-  getKey,
-  setKey,
-  isCached,
-  generateKey,
-  removeKey,
-  cacheFn,
-  DEFAULT_EXPIRY: DEFAULT_REDIS_EXPIRY,
-} = pawan(host, port, serviceName, password, {});
+import { NextFunction, Request, Response } from 'express';
 
 /**
  * @method isEmpty
@@ -44,25 +20,12 @@ export const isEmpty = (value: string | number | object): boolean => {
   }
 };
 
-export const generateReferralCode: any = () => {
-  return randomize('A0', 7);
-};
-
-export const createOTPMessageForWeb = (otp: Number, sellerWebsite: string): string => {
-  return `${otp} - is the OTP for ${sellerWebsite} login. ECGv16vDXDa
--Blitzscale`;
-};
-
-export const createOTPMessageForAppOrDashboard = (otp: Number): string => {
-  return `${otp} - is the OTP for your Nushop account. ECGv16vDXDa
--Blitzscale`;
-};
-
-export const keyMirror = (...keys) => {
-  return keys.reduce((acc, key) => {
-    return {
-      ...acc,
-      [key]: key,
-    };
-  }, {});
+export const asyncWrapper = (controllerFunction: Function) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await controllerFunction(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  };
 };

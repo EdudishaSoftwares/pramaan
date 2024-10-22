@@ -1,17 +1,32 @@
 import { Router } from 'express';
 import { Routes } from '@/interfaces/routes.interface';
-//utils
+import { asyncWrapper } from '@/utils/util';
+import ValidatorMiddleware from '@/middlewares/validator.middleware';
+import * as authenticateControllerValidators from '@/controllers/validators/authenticate.controller.validation';
+
+//CONTROLLERS
+import AuthenticateController from '@/controllers/authenticate.controller';
 
 class ExternalRoute implements Routes {
   public path = '/api/v1/platform';
   public router = Router();
+  public authenticateController = new AuthenticateController();
+  private validatorMiddleware = new ValidatorMiddleware();
 
   constructor() {
-    this.initializePageRoutes(`${this.path}/signup`);
+    this.initializeAuthRoutes(`${this.path}/auth`);
   }
 
-  private initializePageRoutes(prefix: string) {
+  private initializeAuthRoutes(prefix: string) {
+    //API FOR USER SIGNUP
+    this.router.post(`${prefix}/signup`, asyncWrapper(this.authenticateController.addNewUser));
 
+    //API FOR USER LOGIN
+    this.router.post(
+      `${prefix}/login`,
+      this.validatorMiddleware.validateRequestBody(authenticateControllerValidators.authenticateControllerBodyParser),
+      asyncWrapper(this.authenticateController.userLogin),
+    );
   }
 }
 

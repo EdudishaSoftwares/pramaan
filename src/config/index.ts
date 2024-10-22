@@ -1,12 +1,6 @@
 import nconf from 'nconf';
 
-import {
-  IApmService,
-  IConfigOptional,
-  IDatabase,
-  IServer,
-  IServices,
-} from '@/typings/config';
+import { IApmService, IConfigOptional, IDatabase, IServer, IServices } from '@/typings/config';
 
 /**
  * Return all the config from this file only

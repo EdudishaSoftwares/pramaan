@@ -1,11 +1,11 @@
 // Modules
 import { Schema, Document } from 'mongoose';
 // Databases
-import { MONGO_CONNECTION_INSTANCES } from '@/databases';
+import { MONGO_CONNECTION_INSTANCES } from '../databases';
 // Interfaces
-import { IUserSchema } from '@/interfaces/user.interface';
+import { IUserSchema } from '../interfaces/user.interface';
 
-console.log("HEY THERE>>>>>>>>>>>>>>>>>>")
+console.log('HEY THERE>>>>>>>>>>>>>>>>>>');
 const dbConnection = MONGO_CONNECTION_INSTANCES.pramaan;
 
 const userProfileSchema: Schema<IUserSchema> = new Schema(

@@ -6,7 +6,7 @@ import { service_name } from '@config';
 
 //DB conncection
 import { MONGO_CONNECTION_INSTANCES } from '@/databases';
-const dbConnection = MONGO_CONNECTION_INSTANCES['demo'];
+const dbConnection = MONGO_CONNECTION_INSTANCES['pramaan'];
 
 class IndexController {
   public index = async (req: Request, res: Response, next: NextFunction) => {
