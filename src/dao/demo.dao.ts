@@ -1,9 +1,9 @@
-import demoModel from '@/models/demo.model';
+// import demoModel from '@/models/user.model';
 
 class DemoDao {
-  public getDemoEntity = async (requestBody) => {
-    //TODO: Some demo entity code
-    return await demoModel.find({ demo_param: requestBody.demo_param });
+  public getDemoEntity = async () => {
+//     //TODO: Some demo entity code
+//     return await demoModel.find({ demo_param: requestBody.demo_param });
   }
 }
 
