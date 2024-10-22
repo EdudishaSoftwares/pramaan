@@ -1,13 +1,42 @@
-import { NextFunction, Response, Request } from 'express';
-//services
+// Modules
+import { Response, Request } from 'express';
+// Services
 import AuthenticateService from '@/services/authenticate.service';
+// Typings
 import { authenticateControllerBody } from './typings/authenticate.controller';
+import { UserSignupBody, UserSignupHeaders } from '@/typings/authenticate';
 
 class AuthenticateController {
+  // Services
   public authenticateService = new AuthenticateService();
 
-  public addNewUser = async (req: Request, res: Response) => {
-    return {};
+  /**
+   * Handles user singup requests.
+   * - Called From: Client application for user signup.
+   * - DAOs: UserDAO to create new user.
+   * ```
+   * POST /api/v1/platform/auth/signup
+   * ```
+   * @param req - The HTTP request object containing the user's login details.
+   * @param res - The HTTP response object used to send the response back to the client.
+   */
+  public userSignup = async (req: Request<{}, {}, UserSignupBody>, res: Response) => {
+    const {
+      first_name: firstName,
+      last_name: lastName,
+      profile_picture: profilePicture,
+      password,
+      email,
+      phone_number: phoneNumber,
+      school_ids: schoolIds,
+    } = req.body;
+    const { wm_role: role, wm_usertype: userType } = req.headers as UserSignupHeaders;
+
+    const userSignupData = { firstName, lastName, profilePicture, password, email, phoneNumber, role, userType, schoolIds };
+
+    await this.authenticateService.userSignup(userSignupData);
+
+    res.status(200).json({message: 'Success'})
   };
 
   /**

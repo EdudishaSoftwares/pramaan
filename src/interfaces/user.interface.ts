@@ -11,6 +11,7 @@ export interface IUserSchema {
   email: string;
   role: ROLE;
   user_type: USER_TYPE;
+  school_ids?: string[];
   is_active: boolean;
   phone_number?: string;
   last_active: Date | null;

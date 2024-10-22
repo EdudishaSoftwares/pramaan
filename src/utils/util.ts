@@ -1,3 +1,11 @@
+/**
+ * All your utils should stay here
+ * Your util function should be pure!
+ * i.e they should accept some argument, and then return some result without any side-effect
+ * Further, they are not allowed to call any other functions
+ */
+
+// Modules
 import { NextFunction, Request, Response } from 'express';
 
 /**
@@ -20,6 +28,11 @@ export const isEmpty = (value: string | number | object): boolean => {
   }
 };
 
+/**
+ * Wrap your function in an async try-catch block.
+ * @param {Function} controllerFunction
+ * @returns
+ */
 export const asyncWrapper = (controllerFunction: Function) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -28,4 +41,44 @@ export const asyncWrapper = (controllerFunction: Function) => {
       next(error);
     }
   };
+};
+
+/**
+ * Checks if passed string is a valid name.
+ * @param {string} name
+ * @returns
+ */
+export const isValidName = (name: string) => {
+  const nameRegex = /\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+/;
+  return nameRegex.test(name);
+};
+
+/**
+ * Checks if passed string is a valid phone number.
+ * @param phoneNumber
+ * @returns
+ */
+export const isValidPhoneNumber = (phoneNumber: string) => {
+  const phoneNumberRegex = /^[0-9]{10}$/;
+  return phoneNumberRegex.test(phoneNumber);
+};
+
+/**
+ * Checks if passed string is a valid email.
+ * @param {string} email
+ * @returns
+ */
+export const isValidEmail = (email: string) => {
+  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  return emailRegex.test(email);
+};
+
+/**
+ * Generate a numeric ID of given length.
+ * @param {number} [idLength = 6]
+ * @returns
+ */
+export const generateUniqueNumericId = (idLength = 6) => {
+  const { customAlphabet } = require('nanoid');
+  return customAlphabet('1234567890', idLength);
 };

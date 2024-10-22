@@ -35,7 +35,7 @@ export interface IDatabaseClient {
   replset_name: string;
 }
 
-export interface IServices {}
+// export interface IServices {}
 
 export interface IConfig {
   NODE_ENV: string;

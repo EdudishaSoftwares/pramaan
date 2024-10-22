@@ -1,6 +1,6 @@
 import { SessionModel } from '@/models/sessions.model';
 
-class SessionDAO {
+export class SessionDAO {
   public async createSession(sessionToken: string, userId: string, expiresAt: Date) {
     return await SessionModel.create({
       sessionToken,
@@ -9,5 +9,3 @@ class SessionDAO {
     });
   }
 }
-
-export default SessionDAO;
