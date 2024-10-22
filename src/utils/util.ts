@@ -6,6 +6,7 @@
  */
 
 // Modules
+import { UserIdentifier } from '@/constants/enum';
 import { NextFunction, Request, Response } from 'express';
 
 /**
@@ -81,4 +82,22 @@ export const isValidEmail = (email: string) => {
 export const generateUniqueNumericId = (idLength = 6) => {
   const { customAlphabet } = require('nanoid');
   return customAlphabet('1234567890', idLength);
+}
+
+/**
+ * Get user identifier type.
+ * @param {string} identifier
+ * @returns
+ */
+export const getUserIdentifierType = (identifier: string): UserIdentifier => {
+  const phoneRegex = /^[6-9]\d{9}$/;
+  const emailRegex = /\S+@\S+\.\S+/;
+
+  if (phoneRegex.test(identifier)) {
+    return UserIdentifier.PhoneNumber;
+  } else if (emailRegex.test(identifier)) {
+    return UserIdentifier.Email;
+  } else {
+    return UserIdentifier.UserId;
+  }
 };

@@ -66,6 +66,23 @@ class AuthenticateController {
     res.setHeader('wm_role', user?.role || 'student');
     return res.status(200).json(user);
   };
+
+  /**
+   * Handles sending OTP requests for user authentication.
+   * - Called From: Client application to initiate the OTP-based authentication process.
+   * - DAOs: OtpDAO to create and manage OTP entries associated with users.
+   * - External Libraries: Nodemailer for sending OTP emails.
+   * ```
+   * POST /api/v1/platform/auth/send-otp
+   * ```
+   * @param req - The HTTP request object containing the user's email address.
+   * @param res - The HTTP response object used to send the response back to the client.
+   */
+  public sendOtp = async (req: Request, res: Response) => {
+    const { email } = req.body;
+    const result = await this.authenticateService.sendOtp(email);
+    return res.status(200).json(result);
+  };
 }
 
 export default AuthenticateController;
