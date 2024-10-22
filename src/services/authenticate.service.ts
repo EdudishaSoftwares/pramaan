@@ -7,6 +7,7 @@ import { UserIdentifier } from '@/constants/enum';
 import { HandledError } from '@/exceptions/HandledError';
 import emailHelper from '@/helpers/email.helper';
 import { Types } from 'mongoose';
+import { getUserIdentifierType } from '@/utils/util';
 class AuthenticateService {
   private userDAO = new UserDAO();
   private sessionDAO = new SessionDAO();
@@ -21,22 +22,15 @@ class AuthenticateService {
    * Authenticates a user based on the provided identifier (either phone number, email, or user ID)
    * and password. If the authentication is successful, a new session is created and a session token
    * is returned along with the user's details (excluding the password).
-   * @param identifier - A string that can be a 10-digit phone number, an email address, or a user ID
+   * @param {string} identifier - A string that can be a 10-digit phone number, an email address, or a user ID
    * used to identify the user.
-   * @param password - A string representing the user's password that needs to be validated.
+   * @param {string} password - A string representing the user's password that needs to be validated.
    * @returns An object containing the session token, expiration date, and user details
    * (excluding the password), or an error message if authentication fails.
    */
   public async userLogin(identifier: string, password: string) {
-    let user;
-
-    if (/^\d{10}$/.test(identifier)) {
-      user = await this.userDAO.findByIdentifier(UserIdentifier.PhoneNumber, identifier);
-    } else if (/\S+@\S+\.\S+/.test(identifier)) {
-      user = await this.userDAO.findByIdentifier(UserIdentifier.Email, identifier);
-    } else {
-      user = await this.userDAO.findByIdentifier(UserIdentifier.UserId, identifier);
-    }
+    // Find user based on identifier (phone_number, email, user_id)
+    const user = await this.userDAO.findByIdentifier(getUserIdentifierType(identifier), identifier);
 
     if (!user || !(await comparePasswords(password, user.password))) {
       throw new HandledError('Incorrect email or password', 401);
@@ -59,7 +53,7 @@ class AuthenticateService {
   /**
    * The function first checks if the user exists. If an existing valid OTP is found, it is resent.
    * If no valid OTP exists, a new OTP is generated, saved in the database, and sent to the user's email.
-   * @param email - A string representing the user's email address to which the OTP will be sent.
+   * @param {string} email - A string representing the user's email address to which the OTP will be sent.
    * @returns An object containing a message indicating the status of the OTP request and the OTP itself if sent.
    * @throws HandledError if the user is not found or if other issues occur during OTP generation or sending.
    */
