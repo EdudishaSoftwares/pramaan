@@ -1,0 +1,22 @@
+{
+  "service_name": "pramaan",
+  "gcp_route": "pramaan",
+  "database": {
+    "client": "mongodb",
+    "pramaan": {
+      "client": "mongodb",
+      "connection": {
+        "host": "localhost",
+        "port": "27017",
+        "user": "",
+        "password": "",
+        "name": "test"
+      }
+    }
+  },
+  "server": {
+    "port": 3004
+  },
+  "services": {
+  }
+}
