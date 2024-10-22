@@ -5,7 +5,6 @@ import { MONGO_CONNECTION_INSTANCES } from '../databases';
 // Interfaces
 import { IUserSchema } from '../interfaces/user.interface';
 
-console.log('HEY THERE>>>>>>>>>>>>>>>>>>');
 const dbConnection = MONGO_CONNECTION_INSTANCES.pramaan;
 
 const userProfileSchema: Schema<IUserSchema> = new Schema(

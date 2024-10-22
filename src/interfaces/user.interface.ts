@@ -16,3 +16,13 @@ export interface IUserSchema {
   last_active: Date | null;
   is_deactivated: boolean;
 }
+
+export interface IOtpSchema {
+  user: string;
+  user_id: string;
+  email: string;
+  otp: string;
+  expiresAt: Date;
+  isUsed: boolean;
+  isExpired: boolean;
+}

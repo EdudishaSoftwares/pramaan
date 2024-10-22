@@ -36,7 +36,10 @@ export interface IDatabaseClient {
 }
 
 export interface IServices {}
-
+export interface IEmailConfig {
+  user: string;
+  pass: string;
+}
 export interface IConfig {
   NODE_ENV: string;
   LOG_FORMAT: string;

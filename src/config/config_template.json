@@ -17,6 +17,5 @@
   "server": {
     "port": 3004
   },
-  "services": {
-  }
+  "services": {}
 }
