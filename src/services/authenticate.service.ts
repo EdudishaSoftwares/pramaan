@@ -9,7 +9,6 @@ import OtpDAO from '@/dao/otp.dao';
 // Exceptions
 import { HandledError } from '@/exceptions/HandledError';
 // Helpers
-import { AuthenticateHelper } from '@/helpers/authenticate.helper';
 import emailHelper from '@/helpers/email.helper';
 // Formatters
 import { AuthenticateFormatter } from '@/formatters/authenticate.formatter';
@@ -24,8 +23,6 @@ class AuthenticateService {
   private userDAO = new UserDAO();
   private sessionDAO = new SessionDAO();
   private otpDAO = new OtpDAO();
-  // Helpers
-  private authenticateHelper = new AuthenticateHelper();
   // Formatters
   private authenticateFormatter = new AuthenticateFormatter();
 
@@ -34,9 +31,6 @@ class AuthenticateService {
    * @param {UserSignupData} userSignupData
    */
   public userSignup = async (userSignupData: UserSignupData) => {
-    // Validate user data before proceeding.
-    this.authenticateHelper.validateUserSignupData(userSignupData);
-
     // Encrypt password
     const hashedPassword = await hashPassword(userSignupData.password);
     userSignupData = { ...userSignupData, password: hashedPassword };

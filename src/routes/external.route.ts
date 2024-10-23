@@ -8,7 +8,11 @@ import { Routes } from '@/interfaces/routes.interface';
 import ValidatorMiddleware from '@/middlewares/validator.middleware';
 import SessionMiddleware from '@/middlewares/session.middleware';
 // Validators
-import * as authenticateControllerValidators from '@/controllers/validators/authenticate.controller.validation';
+import {
+  userSignupBodyParser,
+  authenticateControllerBodyParser,
+  sendOtpBodyParser,
+} from '@/controllers/validators/authenticate.controller.validation';
 // Utils
 import { asyncWrapper } from '@/utils/util';
 
@@ -28,19 +32,24 @@ class ExternalRoute implements Routes {
 
   private initializeAuthRoutes(prefix: string) {
     //API FOR USER SIGNUP
-    this.router.post(`${prefix}/signup`, this.sessionMiddleware.validate, asyncWrapper(this.authenticateController.userSignup));
+    this.router.post(
+      `${prefix}/signup`,
+      this.sessionMiddleware.validate,
+      this.validatorMiddleware.validateRequestBody(userSignupBodyParser),
+      asyncWrapper(this.authenticateController.userSignup),
+    );
 
     //API FOR USER LOGIN
     this.router.post(
       `${prefix}/login`,
-      this.validatorMiddleware.validateRequestBody(authenticateControllerValidators.authenticateControllerBodyParser),
+      this.validatorMiddleware.validateRequestBody(authenticateControllerBodyParser),
       asyncWrapper(this.authenticateController.userLogin),
     );
 
     //API FOR SEND/RESEND OTP
     this.router.post(
       `${prefix}/send-otp`,
-      this.validatorMiddleware.validateRequestBody(authenticateControllerValidators.sendOtpBodyParser),
+      this.validatorMiddleware.validateRequestBody(sendOtpBodyParser),
       asyncWrapper(this.authenticateController.sendOtp),
     );
   }
