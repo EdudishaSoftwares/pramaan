@@ -1,5 +1,5 @@
 // Models
-import { UserModel } from '@/models/userProfile.model';
+import UserModel from '@/models/userProfile.model';
 // Constants
 import { UserIdentifier } from '@/constants/enum';
 // Interfaces
@@ -7,7 +7,7 @@ import { IUserSchema } from '@/interfaces/user.interface';
 // Typngs
 import { CreateUserInDb } from '@/typings/authenticate';
 
-export class UserDAO {
+class UserDAO {
   // Model
   private userModel = UserModel;
 
@@ -41,3 +41,5 @@ export class UserDAO {
     await UserModel.updateOne({ _id: userId }, { last_active: lastActive });
   }
 }
+
+export default UserDAO;

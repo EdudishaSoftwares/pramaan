@@ -1,6 +1,9 @@
-import { SessionModel } from '@/models/sessions.model';
+import SessionModel from '@/models/sessions.model';
 
-export class SessionDAO {
+class SessionDAO {
+  // Model
+  private sessionModel = SessionModel;
+
   /**
    * Creates a session based on the session token.
    * @param {string} sessionToken - The session token to identify the session.
@@ -8,7 +11,7 @@ export class SessionDAO {
    * @param {Date} expiresAt - The expiresAt Date ti validate session validity.
    */
   public async createSession(sessionToken: string, userId: string, expiresAt: Date) {
-    return await SessionModel.create({
+    return await this.sessionModel.create({
       sessionToken,
       userId,
       expiresAt,
@@ -21,7 +24,7 @@ export class SessionDAO {
    * @returns The session document from the database, or null if the session is not found.
    */
   public async findBySessionToken(sessionToken: string) {
-    return await SessionModel.findOne({ sessionToken }).exec();
+    return await this.sessionModel.findOne({ sessionToken }).exec();
   }
 
   /**
@@ -29,6 +32,8 @@ export class SessionDAO {
    * @param sessionToken - The session token to identify the session.
    */
   public async deleteSession(sessionToken: string) {
-    return await SessionModel.deleteOne({ sessionToken });
+    return await this.sessionModel.deleteOne({ sessionToken });
   }
 }
+
+export default SessionDAO;

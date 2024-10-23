@@ -31,7 +31,7 @@ class AuthenticateController {
       school_ids: schoolIds,
     } = req.body;
 
-    const { wm_role: role, wm_usertype: userType } = req.headers as UserSignupHeaders;
+    const { edu_role: role, edu_usertype: userType } = req.headers as UserSignupHeaders;
 
     const userSignupData = { firstName, lastName, profilePicture, password, email, phoneNumber, role, userType, schoolIds };
 
@@ -63,8 +63,8 @@ class AuthenticateController {
 
     //SETTING COOKIES AND HEADERS REQUIRED FOR OTHER APIS (FE SHOULD  NESSARY SEND THIS AS HEADERS IN EVERY API CALLS)
     res.cookie('session_token', sessionToken, { maxAge });
-    res.setHeader('wm_usertype', user?.user_type || 'user');
-    res.setHeader('wm_role', user?.role || 'student');
+    res.setHeader('edu_usertype', user?.user_type || 'user');
+    res.setHeader('edu_role', user?.role || 'student');
     return res.status(200).json(user);
   };
 

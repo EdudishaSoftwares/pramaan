@@ -52,4 +52,4 @@ userProfileSchema.pre('save', function (next) {
 
 const UserModel = dbConnection.model<Document & IUserSchema>('userProfile', userProfileSchema);
 
-export { UserModel };
+export default UserModel;

@@ -32,4 +32,4 @@ const sessionSchema = new Schema<SessionDocument>(
 
 const SessionModel = dbConnection.model<SessionDocument>('Session', sessionSchema);
 
-export { SessionModel };
+export default SessionModel;

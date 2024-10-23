@@ -20,4 +20,4 @@ class EmailHelper {
   }
 }
 
-export default new EmailHelper();
+export default EmailHelper;

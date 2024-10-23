@@ -2,12 +2,15 @@ import OtpModel from '@/models/otp.model';
 import { IOtpSchema } from '@/interfaces/user.interface';
 
 class OtpDAO {
+  // Model
+  private otpModel = OtpModel;
+
   /**
    * Finds Valid OTP based on the UserId.
    * @param {string} userId - The userId is MongoId od UserDao used for ref.
    */
   public async findValidOtp(userId: string) {
-    return await OtpModel.findOne({
+    return await this.otpModel.findOne({
       user: userId,
       isUsed: false,
       expiresAt: { $gt: new Date() },
@@ -19,7 +22,7 @@ class OtpDAO {
    * @param {Partial<IOtpSchema>} data - The data is payload to create OTP document.
    */
   public async createOtp(data: Partial<IOtpSchema>) {
-    return await OtpModel.create(data);
+    return await this.otpModel.create(data);
   }
 
   /**
@@ -27,7 +30,7 @@ class OtpDAO {
    * @param {Partial<string>} otpId - The otpId is MongoId.
    */
   public async markOtpAsUsed(otpId: string) {
-    return await OtpModel.findByIdAndUpdate(otpId, { isUsed: true });
+    return await this.otpModel.findByIdAndUpdate(otpId, { isUsed: true });
   }
 }
 

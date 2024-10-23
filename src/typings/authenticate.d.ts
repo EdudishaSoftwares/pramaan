@@ -7,8 +7,8 @@ import { CamelCaseKeys } from './common';
 
 export type UserSignupBody = Pick<IUserSchema, 'first_name' | 'last_name' | 'profile_picture' | 'password' | 'email' | 'phone_number' | 'school_ids'>;
 export type UserSignupHeaders = {
-  wm_role: ROLE;
-  wm_usertype: USER_TYPE;
+  edu_role: ROLE;
+  edu_usertype: USER_TYPE;
 };
 
 export type UserSignupData = CamelCaseKeys<UserSignupBody & Pick<IUserSchema, 'role' | 'user_type'>>;

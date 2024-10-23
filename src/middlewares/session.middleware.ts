@@ -1,5 +1,6 @@
-import AuthenticateService from '@/services/authenticate.service';
 import { Request, Response, NextFunction } from 'express';
+//Services
+import AuthenticateService from '@/services/authenticate.service';
 
 class SessionMiddleware {
   private authenticateService = new AuthenticateService();
@@ -28,7 +29,7 @@ class SessionMiddleware {
 
       next();
     } catch (error) {
-      // Handle errors properly here if needed, or use next(error) to pass it to global error handler
+      next(error);
       return res.status(500).json({ error: 'Internal server error' });
     }
   }

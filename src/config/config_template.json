@@ -10,12 +10,18 @@
         "port": "27017",
         "user": "",
         "password": "",
-        "name": "test"
+        "name": "pramaan"
       }
     }
   },
   "server": {
     "port": 3004
   },
-  "services": {}
+  "services": {
+    "attendence_service" : "service link"
+  },
+  "email": {
+    "user": "",
+    "pass": ""
+  }
 }

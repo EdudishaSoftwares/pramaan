@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import { randomInt } from 'crypto';
 
 /**
  * Hashes a password using bcrypt.
@@ -7,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
  * @returns The hashed password.
  */
 export const hashPassword = async (password: string): Promise<string> => {
-  return await bcrypt.hash(password, 10);
+  return await bcrypt.hash(password, randomInt(1, 10));
 };
 
 /**
@@ -26,4 +27,9 @@ export const comparePasswords = async (password: string, hashedPassword: string)
  */
 export const generateSessionToken = (): string => {
   return uuidv4();
+};
+
+export const generateStrongOTP = (): number => {
+  const otp: number = randomInt(100000, 1000000);
+  return otp;
 };

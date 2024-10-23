@@ -3,19 +3,19 @@ import R from 'ramda';
 // Constants
 import { UserIdentifier } from '@/constants/enum';
 // Dao
-import { UserDAO } from '@/dao/user.dao';
-import { SessionDAO } from '@/dao/session.dao';
+import UserDAO from '@/dao/user.dao';
+import SessionDAO from '@/dao/session.dao';
 import OtpDAO from '@/dao/otp.dao';
 // Exceptions
 import { HandledError } from '@/exceptions/HandledError';
 // Helpers
-import emailHelper from '@/helpers/email.helper';
+import EmailHelper from '@/helpers/email.helper';
 // Formatters
 import { AuthenticateFormatter } from '@/formatters/authenticate.formatter';
 // Typings
 import { UserSignupData } from '@/typings/authenticate';
 // Utils
-import { hashPassword, comparePasswords, generateSessionToken } from '@/utils/auth.utils';
+import { hashPassword, comparePasswords, generateSessionToken, generateStrongOTP } from '@/utils/auth.utils';
 
 import { getUserIdentifierType } from '@/utils/util';
 class AuthenticateService {
@@ -23,6 +23,8 @@ class AuthenticateService {
   private userDAO = new UserDAO();
   private sessionDAO = new SessionDAO();
   private otpDAO = new OtpDAO();
+  // Helpers
+  private emailHelper = new EmailHelper();
   // Formatters
   private authenticateFormatter = new AuthenticateFormatter();
 
@@ -91,12 +93,12 @@ class AuthenticateService {
     // Check for an existing valid OTP
     const existingOtp = await this.otpDAO.findValidOtp(user._id);
     if (existingOtp) {
-      await emailHelper.sendOtpEmail(user.email, existingOtp.otp);
+      await this.emailHelper.sendOtpEmail(user.email, existingOtp.otp);
       return { message: 'OTP resent to your email', otp: existingOtp.otp };
     }
 
     // Generate a new OTP if no valid OTP exists
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = generateStrongOTP().toString();
     const expiresAt = new Date();
     expiresAt.setMinutes(expiresAt.getMinutes() + 10);
 
@@ -109,7 +111,7 @@ class AuthenticateService {
       expiresAt,
     });
 
-    await emailHelper.sendOtpEmail(user.email, otp);
+    await this.emailHelper.sendOtpEmail(user.email, otp);
     return { message: 'OTP sent to your email' };
   }
 

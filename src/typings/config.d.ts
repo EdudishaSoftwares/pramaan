@@ -35,7 +35,10 @@ export interface IDatabaseClient {
   replset_name: string;
 }
 
-// export interface IServices {}
+//AS OF NOW IT IS EMPTY OBJECT BUT WHEN SERVICES COMES IT WILL BE HERE
+export interface IServices {
+  attendence_service: string;
+}
 
 export interface IEmailConfig {
   user: string;
