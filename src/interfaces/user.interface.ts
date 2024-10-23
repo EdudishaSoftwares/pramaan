@@ -1,5 +1,6 @@
 // Constants
 import { ROLE, USER_TYPE } from '@/constants/user';
+import { ObjectId } from 'mongoose';
 
 export interface IUserSchema {
   _id: string;
@@ -26,4 +27,10 @@ export interface IOtpSchema {
   expiresAt: Date;
   isUsed: boolean;
   isExpired: boolean;
+}
+
+export interface ISessionSchema {
+  sessionToken: string;
+  userId: string | ObjectId;
+  expiresAt: Date;
 }

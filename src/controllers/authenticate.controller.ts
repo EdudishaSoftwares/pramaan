@@ -8,7 +8,7 @@ import { UserSignupBody, UserSignupHeaders } from '@/typings/authenticate';
 
 class AuthenticateController {
   // Services
-  public authenticateService = new AuthenticateService();
+  private authenticateService = new AuthenticateService();
 
   /**
    * Handles user singup requests.
@@ -36,7 +36,7 @@ class AuthenticateController {
 
     await this.authenticateService.userSignup(userSignupData);
 
-    res.status(200).json({message: 'Success'})
+    res.status(200).json({ message: 'Success' });
   };
 
   /**
@@ -82,6 +82,31 @@ class AuthenticateController {
     const { email } = req.body;
     const result = await this.authenticateService.sendOtp(email);
     return res.status(200).json(result);
+  };
+
+  /**
+   * Handles session validation requests.
+   * - Called From: Other services to verify a session and retrieve user details.
+   * - DAOs: SessionDAO to retrieve session details,
+   *         UserProfileDAO to retrieve user details.
+   * - External Libraries: None (session-token is passed via headers).
+   * ```
+   * GET /api/v1/internal/auth/validate-session
+   * ```
+   * @param req - The HTTP request object containing the session token in the headers.
+   * @param res - The HTTP response object used to send the session and user data back to the caller.
+   */
+  public validateSession = async (req: Request, res: Response) => {
+    const sessionToken = (req.headers['session-token'] as string) || req.cookies['session_token'];
+
+    const validationResult = await this.authenticateService.validateSession(sessionToken);
+
+    const { session, user } = validationResult;
+
+    return res.status(200).json({
+      session,
+      user,
+    });
   };
 }
 

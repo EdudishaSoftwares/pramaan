@@ -1,6 +1,5 @@
 // Modules
 import R from 'ramda';
-import { Types } from 'mongoose';
 // Constants
 import { UserIdentifier } from '@/constants/enum';
 // Dao
@@ -118,6 +117,31 @@ class AuthenticateService {
 
     await emailHelper.sendOtpEmail(user.email, otp);
     return { message: 'OTP sent to your email', otp };
+  }
+
+  /**
+   * Validates a session based on the provided session token.
+   * - Calls the SessionDAO to retrieve session details based on the session token.
+   * - Calls the UserDAO to retrieve user information based on the session's user ID.
+   * @param {string} sessionToken - A string representing the session token passed by the caller.
+   * @returns An object containing the session and user details if the session is valid,
+   * or an error if the session is invalid or expired.
+   */
+  public async validateSession(sessionToken: string) {
+    const session = await this.sessionDAO.findBySessionToken(sessionToken);
+
+    if (!session || session.expiresAt < new Date()) {
+      throw new HandledError('Session expired or invalid', 401);
+    }
+    const user = await this.userDAO.findByIdentifier(UserIdentifier.MongoId, String(session.userId));
+
+    if (!user) {
+      throw new HandledError('User Identification Fails', 404);
+    }
+    return {
+      session,
+      user: R.omit(['password'], user),
+    };
   }
 }
 

@@ -82,7 +82,7 @@ export const isValidEmail = (email: string) => {
 export const generateUniqueNumericId = (idLength = 6) => {
   const { customAlphabet } = require('nanoid');
   return customAlphabet('1234567890', idLength);
-}
+};
 
 /**
  * Get user identifier type.
