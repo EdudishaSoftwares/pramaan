@@ -11,7 +11,6 @@ interface IOtpSchema extends Document {
   otp: string;
   expiresAt: Date;
   isUsed: boolean;
-  isExpired: boolean;
 }
 
 // Create the OTP schema
@@ -23,7 +22,6 @@ const otpSchema = new Schema<IOtpSchema>(
     otp: { type: String, required: true },
     expiresAt: { type: Date, required: true },
     isUsed: { type: Boolean, default: false },
-    isExpired: { type: Boolean, default: false },
   },
   {
     timestamps: true,

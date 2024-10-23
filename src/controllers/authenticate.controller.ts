@@ -30,6 +30,7 @@ class AuthenticateController {
       phone_number: phoneNumber,
       school_ids: schoolIds,
     } = req.body;
+    const user = req.actor;
     const { wm_role: role, wm_usertype: userType } = req.headers as UserSignupHeaders;
 
     const userSignupData = { firstName, lastName, profilePicture, password, email, phoneNumber, role, userType, schoolIds };
@@ -70,7 +71,8 @@ class AuthenticateController {
   /**
    * Handles sending OTP requests for user authentication.
    * - Called From: Client application to initiate the OTP-based authentication process.
-   * - DAOs: OtpDAO to create and manage OTP entries associated with users.
+   * - DAOs: UserDAO to retrieve user details based on email
+   *         OtpDAO to create and manage OTP entries associated with users.
    * - External Libraries: Nodemailer for sending OTP emails.
    * ```
    * POST /api/v1/platform/auth/send-otp
@@ -88,7 +90,7 @@ class AuthenticateController {
    * Handles session validation requests.
    * - Called From: Other services to verify a session and retrieve user details.
    * - DAOs: SessionDAO to retrieve session details,
-   *         UserProfileDAO to retrieve user details.
+   *         UserDAO to retrieve user details.
    * - External Libraries: None (session-token is passed via headers).
    * ```
    * GET /api/v1/internal/auth/validate-session
@@ -107,6 +109,40 @@ class AuthenticateController {
       session,
       user,
     });
+  };
+
+  /**
+   * Controller for verifying OTP.
+   * - Called From: Client application during the OTP verification process.
+   * - DAOs: UserDAO to retrieve user based on identifier and OTP,
+   *         OTP DAO to validate the OTP.
+   * ```
+   * POST /api/v1/platform/auth/verify-otp
+   * ```
+   * @param req - The HTTP request object containing the identifier and OTP.
+   * @param res - The HTTP response object used to send the response back to the client.
+   */
+  public verifyOtp = async (req: Request, res: Response) => {
+    const { email, otp } = req.body;
+    const user = await this.authenticateService.verifyOtp(email, otp);
+    return res.status(200).json({ message: 'OTP verified successfully', user });
+  };
+
+  /**
+   * Controller for logging out the user.
+   * - Called From: Client application to log out the user.
+   * - DAOs: Sessions DAO to delete the session based on token.
+   * ```
+   * POST /api/v1/platform/auth/logout
+   * ```
+   * @param req - The HTTP request object containing the session token.
+   * @param res - The HTTP response object used to send the response back to the client.
+   */
+  public logout = async (req: Request, res: Response) => {
+    const sessionToken = req.cookies['session_token'] || req.headers['session-token'];
+    await this.authenticateService.logout(sessionToken);
+    res.clearCookie('session_token');
+    return res.status(200).json({ message: 'Logged out successfully' });
   };
 }
 

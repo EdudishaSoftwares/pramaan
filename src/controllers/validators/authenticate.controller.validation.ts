@@ -36,3 +36,20 @@ export const userSignupBodyParser = z.object({
   phone_number: z.string().regex(phoneNumberRegex, 'Invalid phone number!').optional(),
   school_ids: z.string().array().min(1),
 });
+
+export const verifyOtpBodyParser = z.object({
+  email: z
+    .string()
+    .email()
+    .min(5, 'Email must be at least 5 characters long')
+    .max(35, 'Email must be at most 25 characters long')
+    .nonempty('Email is required'),
+  otp: z
+    .string()
+    .refine(val => /^\d+$/.test(val), {
+      message: 'OTP must be a Numeric',
+    })
+    .refine(val => val.length === 6, {
+      message: 'OTP must be exactly 6 digits long',
+    }),
+});
