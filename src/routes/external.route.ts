@@ -43,6 +43,16 @@ class ExternalRoute implements Routes {
       this.validatorMiddleware.validateRequestBody(authenticateControllerValidators.sendOtpBodyParser),
       asyncWrapper(this.authenticateController.sendOtp),
     );
+
+    //API FOR VERIFYING OTP
+    this.router.post(
+      `${prefix}/verify-otp`,
+      this.validatorMiddleware.validateRequestBody(authenticateControllerValidators.verifyOtpBodyParser),
+      asyncWrapper(this.authenticateController.verifyOtp),
+    );
+
+    //API FOR LOGGING OUT USER
+    this.router.post(`${prefix}/logout`, asyncWrapper(this.authenticateController.logout));
   }
 }
 

@@ -21,3 +21,20 @@ export const sendOtpBodyParser = z.object({
     .max(35, 'Email must be at most 25 characters long')
     .nonempty('Email is required'),
 });
+
+export const verifyOtpBodyParser = z.object({
+  email: z
+    .string()
+    .email()
+    .min(5, 'Email must be at least 5 characters long')
+    .max(35, 'Email must be at most 25 characters long')
+    .nonempty('Email is required'),
+  otp: z
+    .string()
+    .refine(val => /^\d+$/.test(val), {
+      message: 'OTP must be a Numeric',
+    })
+    .refine(val => val.length === 6, {
+      message: 'OTP must be exactly 6 digits long',
+    }),
+});

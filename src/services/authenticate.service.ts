@@ -116,7 +116,34 @@ class AuthenticateService {
     });
 
     await emailHelper.sendOtpEmail(user.email, otp);
-    return { message: 'OTP sent to your email', otp };
+    return { message: 'OTP sent to your email' };
+  }
+
+  /**
+   * Verifies OTP based on the provided identifier (email, phone, or user ID).
+   * @param identifier - A string representing phone number, email, or user ID.
+   * @param otp - A string representing the OTP to be validated.
+   * @returns The user details if OTP is valid.
+   */
+  public async verifyOtp(email: string, otp: string) {
+    const user = await this.userDAO.findByIdentifier(UserIdentifier.Email, email);
+    if (!user) {
+      throw new HandledError('User not found', 404);
+    }
+
+    const otpRecord = await this.otpDAO.findValidOtp(user._id.toString());
+    if (!otpRecord) {
+      throw new HandledError('OTP expired or invalid', 400);
+    }
+
+    if (otpRecord.otp !== otp) {
+      throw new HandledError('Incorrect OTP', 400);
+    }
+
+    // If OTP is correct, mark it as used
+    await this.otpDAO.markOtpAsUsed(otpRecord._id);
+
+    return R.omit(['password'], user);
   }
 
   /**
@@ -142,6 +169,22 @@ class AuthenticateService {
       session,
       user: R.omit(['password'], user),
     };
+  }
+
+  /**
+   * Logs out the user by deleting the session from the database.
+   * @param sessionToken - The session token of the user to be logged out.
+   * @returns A promise indicating the success of the operation.
+   */
+  public async logout(sessionToken: string) {
+    //May be optional or not needed. Done to just cater any edge cases
+    const session = await this.sessionDAO.findBySessionToken(sessionToken);
+
+    if (!session) {
+      throw new HandledError('Invalid session token', 401);
+    }
+
+    await this.sessionDAO.deleteSession(sessionToken);
   }
 }
 
