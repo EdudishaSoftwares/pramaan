@@ -6,8 +6,10 @@
  */
 
 // Modules
-import { UserIdentifier } from '@/constants/enum';
 import { NextFunction, Request, Response } from 'express';
+// Constants
+import { emailRegex, phoneNumberRegex } from '@/constants/common.constants';
+import { UserIdentifier } from '@/constants/enum';
 
 /**
  * @method isEmpty

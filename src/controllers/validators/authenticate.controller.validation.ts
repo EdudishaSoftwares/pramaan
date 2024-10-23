@@ -1,4 +1,7 @@
+// Modules
 import { z } from 'zod';
+// Constants
+import { nameRegex, phoneNumberRegex } from '@/constants/common.constants';
 
 export const authenticateControllerBodyParser = z.object({
   identifier: z
