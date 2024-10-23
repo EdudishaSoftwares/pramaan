@@ -1,4 +1,4 @@
-import { Schema, Document, model } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 // Databases
 import { MONGO_CONNECTION_INSTANCES } from '@/databases';
 

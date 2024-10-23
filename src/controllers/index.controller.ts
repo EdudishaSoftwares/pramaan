@@ -1,11 +1,10 @@
+// Modules
 import { NextFunction, Request, Response } from 'express';
-import { connect } from 'mongoose';
-
 //Config
 import { service_name } from '@config';
-
 //DB conncection
 import { MONGO_CONNECTION_INSTANCES } from '@/databases';
+
 const dbConnection = MONGO_CONNECTION_INSTANCES['pramaan'];
 
 class IndexController {

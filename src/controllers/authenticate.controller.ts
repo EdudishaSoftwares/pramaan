@@ -30,7 +30,7 @@ class AuthenticateController {
       phone_number: phoneNumber,
       school_ids: schoolIds,
     } = req.body;
-    const user = req.actor;
+
     const { wm_role: role, wm_usertype: userType } = req.headers as UserSignupHeaders;
 
     const userSignupData = { firstName, lastName, profilePicture, password, email, phoneNumber, role, userType, schoolIds };

@@ -10,7 +10,7 @@ import config, { port, gcpRoute } from '@config';
 import { Routes } from '@/interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 // import { logger } from '@utils/logger';
-import * as Sentry from '@sentry/node';
+// import * as Sentry from '@sentry/node';
 import bodyParser from 'body-parser';
 import { NotFoundError } from '@exceptions/NotFoundError';
 // import { Logger } from 'winston';

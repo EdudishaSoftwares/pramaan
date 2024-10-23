@@ -12,6 +12,7 @@ import {
   userSignupBodyParser,
   authenticateControllerBodyParser,
   sendOtpBodyParser,
+  verifyOtpBodyParser,
 } from '@/controllers/validators/authenticate.controller.validation';
 // Utils
 import { asyncWrapper } from '@/utils/util';
@@ -56,7 +57,7 @@ class ExternalRoute implements Routes {
     //API FOR VERIFYING OTP
     this.router.post(
       `${prefix}/verify-otp`,
-      this.validatorMiddleware.validateRequestBody(authenticateControllerValidators.verifyOtpBodyParser),
+      this.validatorMiddleware.validateRequestBody(verifyOtpBodyParser),
       asyncWrapper(this.authenticateController.verifyOtp),
     );
 
