@@ -23,7 +23,7 @@ const mongoConnectionInstances: Record<string, mongoose.Connection> = {};
  */
 const getConnectionURL = (dbConfig: IDatabaseClient) =>
   `${dbConfig.client}://${[
-    `${dbConfig.connection.host}:${dbConfig.connection.port}`,
+    `${dbConfig.connection.host}`,
     ...(isProduction ? (dbConfig.replicas || []).map(connection => `${connection.host}:${connection.port}`) : []),
   ].join(',')}/${dbConfig.connection.name}`;
 
