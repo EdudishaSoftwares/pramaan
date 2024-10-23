@@ -10,7 +10,7 @@ import config, { port, gcpRoute } from '@config';
 import { Routes } from '@/interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 // import { logger } from '@utils/logger';
-import * as Sentry from '@sentry/node';
+// import * as Sentry from '@sentry/node';
 import bodyParser from 'body-parser';
 import { NotFoundError } from '@exceptions/NotFoundError';
 // import { Logger } from 'winston';
@@ -21,19 +21,15 @@ class App {
   public app: Application;
   public env: string;
   public port: string | number;
-  public useSentry: boolean;
-  // public zeusLogger?: Logger;
   private routes: Routes[];
 
   constructor(routes: Routes[]) {
-
     this.env = NODE_ENV || 'development';
     this.port = port || 3000;
     this.routes = routes;
     this.app = express();
 
     this.app.enable('trust proxy');
-    //initializeMongoConnections();
     this.initializeMiddlewares();
   }
 
@@ -71,11 +67,6 @@ class App {
       }
       next();
     });
-
-    if (this.useSentry) {
-      // The request handler must be the first middleware on the app
-      this.app.use(Sentry.Handlers.requestHandler());
-    }
 
     this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
     this.app.use(bodyParser.json({ limit: '50mb' }));

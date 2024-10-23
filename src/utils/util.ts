@@ -5,24 +5,11 @@
  * Further, they are not allowed to call any other functions
  */
 
-import randomize from 'randomatic';
-import { redis, service_name } from '@config';
-const pawan = require('pawan');
-
-const port = redis.port,
-  serviceName = service_name,
-  password = redis.password,
-  host = redis.host;
-
-export const {
-  getKey,
-  setKey,
-  isCached,
-  generateKey,
-  removeKey,
-  cacheFn,
-  DEFAULT_EXPIRY: DEFAULT_REDIS_EXPIRY,
-} = pawan(host, port, serviceName, password, {});
+// Modules
+import { NextFunction, Request, Response } from 'express';
+// Constants
+import { emailRegex, phoneNumberRegex } from '@/constants/common.constants';
+import { UserIdentifier } from '@/constants/enum';
 
 /**
  * @method isEmpty
@@ -44,25 +31,42 @@ export const isEmpty = (value: string | number | object): boolean => {
   }
 };
 
-export const generateReferralCode: any = () => {
-  return randomize('A0', 7);
+/**
+ * Wrap your function in an async try-catch block.
+ * @param {Function} controllerFunction
+ * @returns
+ */
+export const asyncWrapper = (controllerFunction: Function) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await controllerFunction(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  };
 };
 
-export const createOTPMessageForWeb = (otp: Number, sellerWebsite: string): string => {
-  return `${otp} - is the OTP for ${sellerWebsite} login. ECGv16vDXDa
--Blitzscale`;
+/**
+ * Generate a numeric ID of given length.
+ * @param {number} [idLength = 6]
+ * @returns
+ */
+export const generateUniqueNumericId = (idLength = 6) => {
+  const { customAlphabet } = require('nanoid');
+  return customAlphabet('1234567890', idLength);
 };
 
-export const createOTPMessageForAppOrDashboard = (otp: Number): string => {
-  return `${otp} - is the OTP for your Nushop account. ECGv16vDXDa
--Blitzscale`;
-};
-
-export const keyMirror = (...keys) => {
-  return keys.reduce((acc, key) => {
-    return {
-      ...acc,
-      [key]: key,
-    };
-  }, {});
+/**
+ * Get user identifier type.
+ * @param {string} identifier
+ * @returns
+ */
+export const getUserIdentifierType = (identifier: string): UserIdentifier => {
+  if (phoneNumberRegex.test(identifier)) {
+    return UserIdentifier.PhoneNumber;
+  } else if (emailRegex.test(identifier)) {
+    return UserIdentifier.Email;
+  } else {
+    return UserIdentifier.UserId;
+  }
 };

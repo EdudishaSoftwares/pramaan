@@ -1,4 +1,3 @@
-
 type CreateOptions<T> = {
   [Property in keyof T]+?: T[Property];
 };
@@ -36,11 +35,15 @@ export interface IDatabaseClient {
   replset_name: string;
 }
 
-
-
+//AS OF NOW IT IS EMPTY OBJECT BUT WHEN SERVICES COMES IT WILL BE HERE
 export interface IServices {
+  attendence_service: string;
 }
 
+export interface IEmailConfig {
+  user: string;
+  pass: string;
+}
 export interface IConfig {
   NODE_ENV: string;
   LOG_FORMAT: string;
