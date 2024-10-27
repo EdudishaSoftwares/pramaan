@@ -38,7 +38,7 @@ export const email = (() => {
   return nconf.get('email') as IEmailConfig;
 })();
 
-export const maxAllowedSessions = (()=>{
+export const maxAllowedSessions = (() => {
   return nconf.get('max_allowed_sessions') as number;
 })();
 
