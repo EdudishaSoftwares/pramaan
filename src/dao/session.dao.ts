@@ -28,6 +28,15 @@ class SessionDAO {
   }
 
   /**
+   * Retrive all the sessions for the perticular userId
+   * @param {userId} userId - The userId of the user
+   * @returns Return all the session from the database, of the perticular userId
+   */
+  public async findByUserId(userId: string) {
+    return await this.sessionModel.find({ userId }).sort({ createdAt: -1 }).exec();
+  }
+
+  /**
    * Deletes a session based on the session token.
    * @param sessionToken - The session token to identify the session.
    */

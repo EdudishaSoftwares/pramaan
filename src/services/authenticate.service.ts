@@ -1,5 +1,7 @@
 // Modules
 import R from 'ramda';
+// Config
+import { maxAllowedSessions } from '@/config';
 // Constants
 import { UserIdentifier } from '@/constants/enum';
 // Dao
@@ -16,8 +18,8 @@ import { AuthenticateFormatter } from '@/formatters/authenticate.formatter';
 import { UserSignupData } from '@/typings/authenticate';
 // Utils
 import { hashPassword, comparePasswords, generateSessionToken, generateStrongOTP } from '@/utils/auth.utils';
-
 import { getUserIdentifierType } from '@/utils/util';
+
 class AuthenticateService {
   // Dao
   private userDAO = new UserDAO();
@@ -59,6 +61,12 @@ class AuthenticateService {
 
     if (!user || !(await comparePasswords(password, user.password))) {
       throw new HandledError('Incorrect email or password', 401);
+    }
+
+    const sessions = await this.sessionDAO.findByUserId(user._id);
+    // Maximum no of allowed session for a perticular user.
+    if (sessions.length >= maxAllowedSessions) {
+      await this.sessionDAO.deleteSession(sessions[sessions.length - 1].sessionToken);
     }
 
     const sessionToken = generateSessionToken();
