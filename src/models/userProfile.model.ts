@@ -4,8 +4,6 @@ import { Schema, Document } from 'mongoose';
 import { MONGO_CONNECTION_INSTANCES } from '../databases';
 // Interfaces
 import { IUserSchema } from '../interfaces/user.interface';
-// Utils
-import { generateUniqueNumericId } from '@/utils/util';
 
 const dbConnection = MONGO_CONNECTION_INSTANCES.pramaan;
 
@@ -28,7 +26,7 @@ const userProfileSchema: Schema<IUserSchema> = new Schema(
     // User type defines if the user is an end-user or from our system.
     user_type: { type: String, enum: ['system', 'user'], required: true },
     // IDs of schools the user is part of.
-    school_ids: { type: [String] },
+    school_ids: [{ type: Schema.Types.ObjectId, ref: 'School' }],
     // Flag to check if user is deleted or not.
     is_active: { type: Boolean, default: true, required: true },
     // User's phone number.
@@ -41,14 +39,6 @@ const userProfileSchema: Schema<IUserSchema> = new Schema(
   // To track createdAt and updatedAt fields
   { timestamps: true },
 );
-
-// Define pre-save middleware to set user_id
-userProfileSchema.pre('save', function (next) {
-  if (!this.user_id) {
-    this.user_id = generateUniqueNumericId();
-  }
-  next();
-});
 
 const UserModel = dbConnection.model<Document & IUserSchema>('userProfile', userProfileSchema);
 

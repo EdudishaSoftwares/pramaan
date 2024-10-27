@@ -42,11 +42,10 @@ export const userSignupBodyParser = z.object({
 
 export const verifyOtpBodyParser = z.object({
   email: z
-    .string()
-    .email()
+    .string({ required_error: 'Email is required' })
+    .email(`Email Must be valid`)
     .min(5, 'Email must be at least 5 characters long')
-    .max(35, 'Email must be at most 25 characters long')
-    .nonempty('Email is required'),
+    .max(35, 'Email must be at most 25 characters long'),
   otp: z
     .string()
     .refine(val => /^\d+$/.test(val), {

@@ -47,16 +47,6 @@ export const asyncWrapper = (controllerFunction: Function) => {
 };
 
 /**
- * Generate a numeric ID of given length.
- * @param {number} [idLength = 6]
- * @returns
- */
-export const generateUniqueNumericId = (idLength = 6) => {
-  const { customAlphabet } = require('nanoid');
-  return customAlphabet('1234567890', idLength);
-};
-
-/**
  * Get user identifier type.
  * @param {string} identifier
  * @returns
