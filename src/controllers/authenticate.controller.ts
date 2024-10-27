@@ -4,10 +4,31 @@ import { Response, Request } from 'express';
 import AuthenticateService from '@/services/authenticate.service';
 // Typings
 import { sendOtpRequestBody, userLoginRequestBody, userSignupRequestBody, verifyOtpRequestBody } from './typings/authenticate.controller';
+// Https
+import PathshalaInternal from '@/https/pathshala.http';
+// ErrorHandler
+import { HandledError } from '@/exceptions/HandledError';
 
 class AuthenticateController {
   // Services
   private authenticateService = new AuthenticateService();
+  // Https
+  private pathshalaInternal = new PathshalaInternal();
+
+  public initialUser = async (req: Request, res: Response) => {
+    const domain = req.get('host');
+    if (!domain) {
+      throw new HandledError('Domain not found');
+    }
+    const schoolDetails = this.pathshalaInternal.getSchoolDetailByDomainName({ domain });
+
+    const response = {
+      user: req.actor,
+      school_details: schoolDetails,
+    };
+
+    return res.status(200).json(response);
+  };
 
   /**
    * Handles user singup requests.

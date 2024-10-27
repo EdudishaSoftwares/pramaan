@@ -36,6 +36,8 @@ class ExternalRoute implements Routes {
   }
 
   private initializeAuthRoutes(prefix: string) {
+    this.router.post(`${prefix}/user`, this.sessionMiddleware.validate, asyncWrapper(this.authenticateController.initialUser));
+
     //API FOR USER SIGNUP
     this.router.post(
       `${prefix}/signup`,
