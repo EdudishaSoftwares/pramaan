@@ -23,5 +23,6 @@
   "email": {
     "user": "",
     "pass": ""
-  }
+  },
+  "max_allowed_session": 3
 }

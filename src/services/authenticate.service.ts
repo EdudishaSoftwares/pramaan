@@ -1,5 +1,7 @@
 // Modules
 import R from 'ramda';
+// Config
+import { maxAllowedSessions } from '@/config';
 // Constants
 import { UserIdentifier } from '@/constants/enum';
 // Dao
@@ -16,8 +18,8 @@ import { AuthenticateFormatter } from '@/formatters/authenticate.formatter';
 import { UserSignupData } from '@/typings/authenticate';
 // Utils
 import { hashPassword, comparePasswords, generateSessionToken, generateStrongOTP } from '@/utils/auth.utils';
-
 import { getUserIdentifierType } from '@/utils/util';
+
 class AuthenticateService {
   // Dao
   private userDAO = new UserDAO();
@@ -62,8 +64,8 @@ class AuthenticateService {
     }
 
     const sessions = await this.sessionDAO.findByUserId(user._id);
-    // Maximum no of allowed session for a perticular user are 3
-    if (sessions.length >= 3) {
+    // Maximum no of allowed session for a perticular user.
+    if (sessions.length >= maxAllowedSessions) {
       await this.sessionDAO.deleteSession(sessions[sessions.length - 1].sessionToken);
     }
 
