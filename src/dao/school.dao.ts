@@ -1,4 +1,6 @@
+// Models
 import School, { ISchool } from '@/models/school.model';
+// Typings
 import { ISchoolDetails } from '@/typings/school';
 
 class SchoolDAO {

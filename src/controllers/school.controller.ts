@@ -1,6 +1,7 @@
-// controllers/SchoolController.ts
 import { Request, Response } from 'express';
+// Services
 import SchoolService from '@/services/school.service';
+// Typings
 import { createSchoolRequestBody } from './typings/school.controller';
 
 /**
@@ -16,6 +17,16 @@ import { createSchoolRequestBody } from './typings/school.controller';
 class SchoolController {
   private schoolService = new SchoolService();
 
+  /**
+   * Handles School Creation Request.
+   * - Called From: Script.
+   * - DAOs: SchoolDao to create new school.
+   * ```
+   * POST /api/v1/platform/school/create
+   * ```
+   * @param req - The HTTP request object containing the schools details.
+   * @param res - The HTTP response object used to send the response back to the client.
+   */
   public createSchool = async (req: Request<{}, {}, createSchoolRequestBody>, res: Response) => {
     const schoolData = req.body;
     const createdSchool = await this.schoolService.createSchool(schoolData);

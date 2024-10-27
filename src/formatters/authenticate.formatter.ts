@@ -1,5 +1,6 @@
 // Typings
 import { CreateUserInDb, UserSignupData } from '@/typings/authenticate';
+// Utils
 import { generateUniqueUserId } from '@/utils/auth.utils';
 
 export class AuthenticateFormatter {

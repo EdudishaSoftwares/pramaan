@@ -1,5 +1,6 @@
-// services/SchoolService.ts
+// Dao
 import SchoolDAO from '@/dao/school.dao';
+// Typings
 import { ISchoolDetails } from '@/typings/school';
 
 class SchoolService {
