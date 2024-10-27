@@ -9,7 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
-      run: npm ci
+      run: npm i
     - name: Lint the code
       run: npx eslint src/. --max-warnings=0
     - name: Prettify the code
