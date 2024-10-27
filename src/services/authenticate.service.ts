@@ -62,6 +62,12 @@ class AuthenticateService {
       throw new HandledError('Incorrect email or password', 401);
     }
 
+    const sessions = await this.sessionDAO.findByUserId(user._id);
+    // Maximum no of allowed session for a perticular user are 3
+    if (sessions.length >= 3) {
+      await this.sessionDAO.deleteSession(sessions[sessions.length - 1].sessionToken);
+    }
+
     const sessionToken = generateSessionToken();
     const expiresAt = new Date();
     expiresAt.setFullYear(expiresAt.getFullYear() + 1);
