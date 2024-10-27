@@ -14,9 +14,9 @@ export default class PathshalaInternal {
    * Retrive all school details by domain
    * @param {string} domain
    */
-  public getSchoolDetailByDomainName = (payload: { domain: string }): Promise<ISchool> => {
-    return fetch(`${this.pathshalaService}/school?identifier=${JSON.stringify(payload)}`, {
+  public getSchoolDetailByDomainName = async (payload: { domain: string }): Promise<ISchool> => {
+    return await fetch(`${this.pathshalaService}/school?identifier=${JSON.stringify(payload)}`, {
       method: RequestMethodEnum.GET,
-    }).then(res => res.json() as unknown as ISchool);
+    }).then(res => res.json());
   };
 }

@@ -20,7 +20,7 @@ class AuthenticateController {
     if (!domain) {
       throw new HandledError('Domain not found');
     }
-    const schoolDetails = this.pathshalaInternal.getSchoolDetailByDomainName({ domain });
+    const schoolDetails = await this.pathshalaInternal.getSchoolDetailByDomainName({ domain });
 
     const response = {
       user: req.actor,
