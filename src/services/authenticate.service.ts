@@ -39,7 +39,6 @@ class AuthenticateService {
 
     // Format user data.
     const formattedUserSignupData = this.authenticateFormatter.formatNewUserData(userSignupData);
-
     // Create user entry in DB.
     await this.userDAO.createUser(formattedUserSignupData);
   };
@@ -152,14 +151,14 @@ class AuthenticateService {
    */
   public async validateSession(sessionToken: string) {
     const session = await this.sessionDAO.findBySessionToken(sessionToken);
-
+    console.log(sessionToken, '=========', session);
     if (!session || session.expiresAt < new Date()) {
-      throw new HandledError('Session expired or invalid', 401);
+      throw new Error('Session expired or invalid');
     }
     const user = await this.userDAO.findByIdentifier(UserIdentifier.MongoId, String(session.userId));
 
     if (!user) {
-      throw new HandledError('User Identification Fails', 404);
+      throw new Error('User Identification Fails');
     }
     return {
       session,

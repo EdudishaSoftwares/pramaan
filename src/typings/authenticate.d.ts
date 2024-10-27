@@ -12,4 +12,4 @@ export type UserSignupHeaders = {
 };
 
 export type UserSignupData = CamelCaseKeys<UserSignupBody & Pick<IUserSchema, 'role' | 'user_type'>>;
-export type CreateUserInDb = UserSignupBody & Pick<IUserSchema, 'role' | 'user_type'>;
+export type CreateUserInDb = UserSignupBody & Pick<IUserSchema, 'role' | 'user_type' | 'user_id'>;

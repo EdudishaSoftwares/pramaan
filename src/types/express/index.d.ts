@@ -9,8 +9,8 @@ declare global {
     }
 
     export interface Request {
-      actor?: Omit<IUserSchema, 'password'>;
-      session?: ISessionSchema;
+      actor: Omit<IUserSchema, 'password'>;
+      session: ISessionSchema;
     }
   }
 }

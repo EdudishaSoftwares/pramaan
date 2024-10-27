@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import { UserModel } from '../models/userProfile.model'; // Adjust the import path as necessary
+import UserModel from '../models/userProfile.model'; // Adjust the import path as necessary
+import { generateUniqueUserId } from '@/utils/auth.utils';
 
 const DB_CONNECTION_STRING = 'mongodb://localhost:27017/pramaan';
 
 const users = [
   {
-    user_id: 'user_001',
+    user_id: generateUniqueUserId(),
     first_name: 'Pratik',
     last_name: 'Khulge',
     profile_picture:
@@ -14,14 +15,14 @@ const users = [
     password: 'password@123',
     email: 'pratikkhulge@gmail.com',
     role: 'admin',
-    user_type: 'user',
+    user_type: 'system',
     is_active: true,
     phone_number: '8888888888',
     last_active: new Date('2024-10-22T12:34:56Z'),
     is_deactivated: false,
   },
   {
-    user_id: 'user_002',
+    user_id: generateUniqueUserId(),
     first_name: 'Akshat',
     last_name: 'Gupta',
     profile_picture:
@@ -29,7 +30,7 @@ const users = [
     password: 'mypassword@456',
     email: 'akshatgupta3000@gmail.com',
     role: 'student',
-    user_type: 'user',
+    user_type: 'system',
     is_active: true,
     phone_number: '7777777777',
     last_active: new Date('2024-10-22T12:34:56Z'),

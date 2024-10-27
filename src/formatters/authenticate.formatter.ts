@@ -1,5 +1,6 @@
 // Typings
 import { CreateUserInDb, UserSignupData } from '@/typings/authenticate';
+import { generateUniqueUserId } from '@/utils/auth.utils';
 
 export class AuthenticateFormatter {
   /**
@@ -9,6 +10,7 @@ export class AuthenticateFormatter {
    */
   public formatNewUserData = (userSignupData: UserSignupData): CreateUserInDb => {
     return {
+      user_id: generateUniqueUserId(),
       first_name: userSignupData.firstName,
       last_name: userSignupData.lastName,
       profile_picture: userSignupData.profilePicture,
