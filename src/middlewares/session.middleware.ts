@@ -11,10 +11,9 @@ class SessionMiddleware {
    * @param res - The HTTP response object used to send the response back to the client.
    * @param next - Calls the next middleware or the controller function if validation succeeds.
    */
-  public async validate(req: Request, res: Response, next: NextFunction) {
+  public validate = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const sessionToken = (req.headers['session-token'] as string) || req.cookies['session_token'];
-
       if (!sessionToken) {
         return res.status(401).json({ error: 'Session token is missing' });
       }
@@ -29,10 +28,9 @@ class SessionMiddleware {
 
       next();
     } catch (error) {
-      next(error);
-      return res.status(500).json({ error: 'Internal server error' });
+      return res.status(500).json({ error: (error as Error).message || 'Internal server error' });
     }
-  }
+  };
 }
 
 export default SessionMiddleware;

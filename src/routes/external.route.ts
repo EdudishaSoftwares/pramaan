@@ -2,6 +2,7 @@
 import { Router } from 'express';
 // Controllers
 import AuthenticateController from '@/controllers/authenticate.controller';
+import SchoolController from '@/controllers/school.controller';
 // Interfaces
 import { Routes } from '@/interfaces/routes.interface';
 // Middlewares
@@ -14,6 +15,7 @@ import {
   sendOtpBodyParser,
   verifyOtpBodyParser,
 } from '@/controllers/validators/authenticate.controller.validation';
+import { createSchoolSchema } from '@/controllers/validators/school.controller.validation';
 // Utils
 import { asyncWrapper } from '@/utils/util';
 
@@ -26,9 +28,11 @@ class ExternalRoute implements Routes {
   private sessionMiddleware = new SessionMiddleware();
   // Controllers
   private authenticateController = new AuthenticateController();
+  private schoolController = new SchoolController();
 
   constructor() {
     this.initializeAuthRoutes(`${this.path}/auth`);
+    this.initializeSchoolRoutes(`${this.path}/school`);
   }
 
   private initializeAuthRoutes(prefix: string) {
@@ -63,6 +67,15 @@ class ExternalRoute implements Routes {
 
     //API FOR LOGGING OUT USER
     this.router.post(`${prefix}/logout`, asyncWrapper(this.authenticateController.logout));
+  }
+  private initializeSchoolRoutes(prefix: string) {
+    //API FOR CREATING SCHOOLS
+    //TODO: NEED TO MOVE THIS TO OTHER SERVICE
+    this.router.post(
+      `${prefix}/create`,
+      this.validatorMiddleware.validateRequestBody(createSchoolSchema),
+      asyncWrapper(this.schoolController.createSchool),
+    );
   }
 }
 

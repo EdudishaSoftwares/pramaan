@@ -3,8 +3,7 @@ import { Response, Request } from 'express';
 // Services
 import AuthenticateService from '@/services/authenticate.service';
 // Typings
-import { authenticateControllerBody } from './typings/authenticate.controller';
-import { UserSignupBody, UserSignupHeaders } from '@/typings/authenticate';
+import { sendOtpRequestBody, userLoginRequestBody, userSignupRequestBody, verifyOtpRequestBody } from './typings/authenticate.controller';
 
 class AuthenticateController {
   // Services
@@ -20,7 +19,7 @@ class AuthenticateController {
    * @param req - The HTTP request object containing the user's login details.
    * @param res - The HTTP response object used to send the response back to the client.
    */
-  public userSignup = async (req: Request<{}, {}, UserSignupBody>, res: Response) => {
+  public userSignup = async (req: Request<{}, {}, userSignupRequestBody>, res: Response) => {
     const {
       first_name: firstName,
       last_name: lastName,
@@ -31,8 +30,7 @@ class AuthenticateController {
       school_ids: schoolIds,
     } = req.body;
 
-    const { edu_role: role, edu_usertype: userType } = req.headers as UserSignupHeaders;
-
+    const { role, user_type: userType } = req.actor;
     const userSignupData = { firstName, lastName, profilePicture, password, email, phoneNumber, role, userType, schoolIds };
 
     await this.authenticateService.userSignup(userSignupData);
@@ -53,7 +51,7 @@ class AuthenticateController {
    * @param req - The HTTP request object containing the user's login details.
    * @param res - The HTTP response object used to send the response back to the client.
    */
-  public userLogin = async (req: Request<{}, {}, authenticateControllerBody>, res: Response) => {
+  public userLogin = async (req: Request<{}, {}, userLoginRequestBody>, res: Response) => {
     const { identifier, password } = req.body;
 
     const loginResult = await this.authenticateService.userLogin(identifier, password);
@@ -65,7 +63,7 @@ class AuthenticateController {
     res.cookie('session_token', sessionToken, { maxAge });
     res.setHeader('edu_usertype', user?.user_type || 'user');
     res.setHeader('edu_role', user?.role || 'student');
-    return res.status(200).json(user);
+    return res.status(200).json({ user, sessionToken });
   };
 
   /**
@@ -80,7 +78,7 @@ class AuthenticateController {
    * @param req - The HTTP request object containing the user's email address.
    * @param res - The HTTP response object used to send the response back to the client.
    */
-  public sendOtp = async (req: Request, res: Response) => {
+  public sendOtp = async (req: Request<{}, {}, sendOtpRequestBody>, res: Response) => {
     const { email } = req.body;
     const result = await this.authenticateService.sendOtp(email);
     return res.status(200).json(result);
@@ -122,7 +120,7 @@ class AuthenticateController {
    * @param req - The HTTP request object containing the identifier and OTP.
    * @param res - The HTTP response object used to send the response back to the client.
    */
-  public verifyOtp = async (req: Request, res: Response) => {
+  public verifyOtp = async (req: Request<{}, {}, verifyOtpRequestBody>, res: Response) => {
     const { email, otp } = req.body;
     const user = await this.authenticateService.verifyOtp(email, otp);
     return res.status(200).json({ message: 'OTP verified successfully', user });
