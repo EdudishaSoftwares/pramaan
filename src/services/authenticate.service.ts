@@ -1,5 +1,5 @@
 // Modules
-import R from 'ramda';
+import R, { identical } from 'ramda';
 // Config
 import { maxAllowedSessions } from '@/config';
 // Constants
@@ -8,6 +8,8 @@ import { UserIdentifier } from '@/constants/enum';
 import UserDAO from '@/dao/user.dao';
 import SessionDAO from '@/dao/session.dao';
 import OtpDAO from '@/dao/otp.dao';
+// Https
+import PathshalaInternal from '@/https/pathshala.http';
 // Exceptions
 import { HandledError } from '@/exceptions/HandledError';
 // Helpers
@@ -29,6 +31,19 @@ class AuthenticateService {
   private emailHelper = new EmailHelper();
   // Formatters
   private authenticateFormatter = new AuthenticateFormatter();
+  // Https
+  private pathshalaInternal = new PathshalaInternal();
+
+  /**
+   * Fetching school by calling pathshala service
+   * @param payload containing the identifier for fetching the school details
+   */
+  public initialUserRequest = async (identifier: { domain?: string }) => {
+    if (!identifier.domain) {
+      throw new HandledError('Domain not found');
+    }
+    return await this.pathshalaInternal.getSchoolDetailByDomainName({ domain: identifier.domain });
+  };
 
   /**
    * Validate user data and create new user entry in DB.

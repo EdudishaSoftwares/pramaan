@@ -11,8 +11,8 @@ export default class PathshalaInternal {
   private pathshalaService = services.pathshala_service;
 
   /**
-   * Retrive all school details by domain
-   * @param {string} domain
+   * Retrive all school details by identifier
+   * @param {payload} identifier for fetching school details
    */
   public getSchoolDetailByDomainName = async (payload: { domain: string }): Promise<ISchool> => {
     return await fetch(`${this.pathshalaService}/school?identifier=${JSON.stringify(payload)}`, {

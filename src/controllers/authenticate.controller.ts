@@ -4,23 +4,24 @@ import { Response, Request } from 'express';
 import AuthenticateService from '@/services/authenticate.service';
 // Typings
 import { sendOtpRequestBody, userLoginRequestBody, userSignupRequestBody, verifyOtpRequestBody } from './typings/authenticate.controller';
-// Https
-import PathshalaInternal from '@/https/pathshala.http';
-// ErrorHandler
-import { HandledError } from '@/exceptions/HandledError';
 
 class AuthenticateController {
   // Services
   private authenticateService = new AuthenticateService();
-  // Https
-  private pathshalaInternal = new PathshalaInternal();
 
+  /**
+   * Retrive to fetch data of school and user on landing page
+   * - Called from client application after client signup
+   * - Http Call: Calls pathshala for fetching school details
+   * ```
+   * POST: /api/v1/platform/user
+   * ```
+   * @param req - The HTTP request object containing the user's login details.
+   * @param res - The HTTP response object used to send the response back to the client.
+   */
   public initialUser = async (req: Request, res: Response) => {
     const domain = req.get('host');
-    if (!domain) {
-      throw new HandledError('Domain not found');
-    }
-    const schoolDetails = await this.pathshalaInternal.getSchoolDetailByDomainName({ domain });
+    const schoolDetails = await this.authenticateService.initialUserRequest({ domain });
 
     const response = {
       user: req.actor,
