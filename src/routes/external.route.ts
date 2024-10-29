@@ -3,6 +3,7 @@ import { Router } from 'express';
 // Controllers
 import AuthenticateController from '@/controllers/authenticate.controller';
 import SchoolController from '@/controllers/school.controller';
+import { PasswordController } from '@/controllers/password.controller';
 // Interfaces
 import { Routes } from '@/interfaces/routes.interface';
 // Middlewares
@@ -29,9 +30,11 @@ class ExternalRoute implements Routes {
   // Controllers
   private authenticateController = new AuthenticateController();
   private schoolController = new SchoolController();
+  private passwordController = new PasswordController();
 
   constructor() {
     this.initializeAuthRoutes(`${this.path}/auth`);
+    this.initializePasswordRoutes(`${this.path}/password`);
     this.initializeSchoolRoutes(`${this.path}/school`);
   }
 
@@ -68,6 +71,13 @@ class ExternalRoute implements Routes {
     //API FOR LOGGING OUT USER
     this.router.post(`${prefix}/logout`, asyncWrapper(this.authenticateController.logout));
   }
+
+  private initializePasswordRoutes(prefix: string) {
+    this.router.put(`${prefix}/update`, asyncWrapper(this.passwordController.updatePassword));
+
+    this.router.post(`${prefix}/send-update-link`, asyncWrapper(this.passwordController.sendUpdatePasswordLink));
+  }
+
   private initializeSchoolRoutes(prefix: string) {
     //API FOR CREATING SCHOOLS
     //TODO: NEED TO MOVE THIS TO OTHER SERVICE

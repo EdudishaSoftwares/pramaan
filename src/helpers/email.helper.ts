@@ -18,6 +18,16 @@ class EmailHelper {
       text: `Your OTP code is ${otp}. It will expire in 10 minutes.`,
     });
   }
+
+  public sendUpdatePasswordLink = async (to: string, resetPasswordLink: string) => {
+    return await this.transporter.sendMail({
+      from: email.user,
+      to,
+      subject: 'Reset Password Link - Expires in 10 minutes.',
+      text: `Reset password link: ${resetPasswordLink}.
+      It will expire in 10 minutes.`,
+    });
+  };
 }
 
 export default EmailHelper;
