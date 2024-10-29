@@ -1,0 +1,16 @@
+on:
+  pull_request:
+    branches:
+    - main
+jobs:
+  validate_build:
+    name: Validates the build and coding standard
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: npm i
+    - name: Lint the code
+      run: npx eslint src/. --max-warnings=0
+    - name: Prettify the code
+      run: npm run prettify-check
