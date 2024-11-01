@@ -8,14 +8,15 @@ import { RequestMethodEnum } from '@/constants/enum';
 import { ISchool } from '@/typings/pathshala';
 
 export default class PathshalaInternal {
+  //Services
   private pathshalaService = services.pathshala_service;
 
   /**
    * Retrive all school details by identifier
-   * @param {payload} identifier for fetching school details
+   * @param {string} domain - identifier for fetching school details
    */
-  public getSchoolDetailByDomainName = async (payload: { domain: string }): Promise<ISchool> => {
-    return await fetch(`${this.pathshalaService}/school?identifier=${JSON.stringify(payload)}`, {
+  public getSchoolDetailByDomainName = async (domain: string): Promise<ISchool> => {
+    return await fetch(`${this.pathshalaService}/school?identifier=${JSON.stringify({domain})}`, {
       method: RequestMethodEnum.GET,
     }).then(res => res.json());
   };

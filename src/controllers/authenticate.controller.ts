@@ -21,7 +21,7 @@ class AuthenticateController {
    */
   public initialUser = async (req: Request, res: Response) => {
     const domain = req.get('host');
-    const schoolDetails = await this.authenticateService.initialUserRequest({ domain });
+    const schoolDetails = await this.authenticateService.initialUserRequest(domain);
 
     const response = {
       user: req.actor,

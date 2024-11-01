@@ -36,13 +36,13 @@ class AuthenticateService {
 
   /**
    * Fetching school by calling pathshala service
-   * @param payload containing the identifier for fetching the school details
+   * @param {string} domain containing the identifier for fetching the school details
    */
-  public initialUserRequest = async (identifier: { domain?: string }) => {
-    if (!identifier.domain) {
+  public initialUserRequest = async (domain?: string) => {
+    if (!domain) {
       throw new HandledError('Domain not found');
     }
-    return await this.pathshalaInternal.getSchoolDetailByDomainName({ domain: identifier.domain });
+    return await this.pathshalaInternal.getSchoolDetailByDomainName(domain);
   };
 
   /**
