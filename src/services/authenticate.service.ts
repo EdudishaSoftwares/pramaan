@@ -1,5 +1,5 @@
 // Modules
-import R, { identical } from 'ramda';
+import R from 'ramda';
 // Config
 import { maxAllowedSessions } from '@/config';
 // Constants
@@ -40,7 +40,7 @@ class AuthenticateService {
    */
   public initialUserRequest = async (domain?: string) => {
     if (!domain) {
-      throw new HandledError('Domain not found');
+      throw new HandledError('Domain not found', 412);
     }
     return await this.pathshalaInternal.getSchoolDetailByDomainName(domain);
   };

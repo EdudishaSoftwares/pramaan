@@ -18,6 +18,7 @@ class SchoolController {
   private schoolService = new SchoolService();
 
   /**
+   * @deprecated moved to pathshala
    * Handles School Creation Request.
    * - Called From: Script.
    * - DAOs: SchoolDao to create new school.
