@@ -18,6 +18,15 @@ class EmailHelper {
       text: `Your OTP code is ${otp}. It will expire in 10 minutes.`,
     });
   }
+
+  public async sendBookDemoRequestEmail(to: string, prefferedDate: Date) {
+    return await this.transporter.sendMail({
+      from: email.user,
+      to,
+      subject: 'Free Demo Booked',
+      text: `Your free demo is booked at ${prefferedDate}. Please find your Google Meet link.`,
+    });
+  }
 }
 
 export default EmailHelper;

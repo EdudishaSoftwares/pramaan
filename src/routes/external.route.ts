@@ -1,6 +1,7 @@
 // Modules
 import { Router } from 'express';
 // Controllers
+import DemoRequestController from '@/controllers/demoRequest.controller';
 import AuthenticateController from '@/controllers/authenticate.controller';
 import SchoolController from '@/controllers/school.controller';
 // Interfaces
@@ -9,6 +10,7 @@ import { Routes } from '@/interfaces/routes.interface';
 import ValidatorMiddleware from '@/middlewares/validator.middleware';
 import SessionMiddleware from '@/middlewares/session.middleware';
 // Validators
+import { bookDemoRequestBodyParser } from '@/controllers/validators/demoRequest.controller.validation';
 import {
   userSignupBodyParser,
   authenticateControllerBodyParser,
@@ -27,12 +29,23 @@ class ExternalRoute implements Routes {
   private validatorMiddleware = new ValidatorMiddleware();
   private sessionMiddleware = new SessionMiddleware();
   // Controllers
+  private demoRequestController = new DemoRequestController();
   private authenticateController = new AuthenticateController();
   private schoolController = new SchoolController();
 
   constructor() {
+    this.initializeDemoRequestRoutes(`${this.path}/demo-request`);
     this.initializeAuthRoutes(`${this.path}/auth`);
     this.initializeSchoolRoutes(`${this.path}/school`);
+  }
+
+  private initializeDemoRequestRoutes(prefix: string) {
+    // API FOR BOOKING DEMO REQUEST
+    this.router.post(
+      `${prefix}/booking`,
+      this.validatorMiddleware.validateRequestBody(bookDemoRequestBodyParser),
+      asyncWrapper(this.demoRequestController.bookDemoRequest),
+    );
   }
 
   private initializeAuthRoutes(prefix: string) {
