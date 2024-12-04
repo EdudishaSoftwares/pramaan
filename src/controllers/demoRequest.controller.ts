@@ -2,8 +2,8 @@
 import { Response, Request } from 'express';
 // Services
 import DemoRequestService from '@/services/demoRequest.service';
-// Typings
-import { bookDemoRequestBody } from './typings/demoRequest.controller';
+// Interfaces
+import { IDemoRequestSchema } from '@/interfaces/demoRequest.interface';
 
 class DemoRequestController {
   // Services
@@ -19,12 +19,8 @@ class DemoRequestController {
    * @param req - The HTTP request object containing the demo booking details.
    * @param res - The HTTP response object used to send the response back to the client.
    */
-  public bookDemoRequest = async (req: Request<{}, {}, bookDemoRequestBody>, res: Response) => {
-    const { first_name: firstName, last_name: lastName, email, message, preffered_date: prefferedDate } = req.body;
-
-    const bookDemoRequestData = { firstName, lastName, email, message, prefferedDate };
-
-    await this.demoRequestService.bookDemoRequest(bookDemoRequestData);
+  public bookDemoRequest = async (req: Request<{}, {}, IDemoRequestSchema>, res: Response) => {
+    await this.demoRequestService.bookDemoRequest(req.body);
 
     res.status(200).json({ message: 'Success' });
   };

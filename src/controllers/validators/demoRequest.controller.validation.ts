@@ -11,7 +11,7 @@ export const bookDemoRequestBodyParser = z.object({
     .string({ required_error: 'Email is required!' })
     .email()
     .min(5, 'Email must be at least 5 characters long')
-    .max(35, 'Email must be at most 25 characters long'),
+    .max(35, 'Email must be at most 35 characters long'),
   message: z.string().optional(),
   preffered_date: z
     .string({ required_error: 'Preffered date is required!' })

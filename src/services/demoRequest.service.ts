@@ -4,8 +4,8 @@ import DemoRequestDAO from '@/dao/demoRequest.dao';
 import EmailHelper from '@/helpers/email.helper';
 // Formatters
 import { DemoRequestFormatter } from '@/formatters/demoRequest.formatter';
-// Typings
-import { BookDemoRequestData } from '@/typings/demoRequest';
+// Interfaces
+import { IDemoRequestSchema } from '@/interfaces/demoRequest.interface';
 
 class DemoRequestService {
   // Dao
@@ -18,15 +18,12 @@ class DemoRequestService {
    * Validate demo request and create new demo request entry in DB.
    * @param {BookDemoRequestData} bookDemoRequestData
    */
-  public bookDemoRequest = async (bookDemoRequestData: BookDemoRequestData) => {
+  public bookDemoRequest = async (bookDemoRequestData: IDemoRequestSchema) => {
     // Sending demo booking confirmation mail to visitor.
-    await this.emailHelper.sendBookDemoRequestEmail(bookDemoRequestData.email, bookDemoRequestData.prefferedDate);
+    await this.emailHelper.sendBookDemoRequestEmail(bookDemoRequestData.email, bookDemoRequestData.preffered_date);
 
-    // Format user data.
-    const formattedBookDemoRequestData = this.demoRequestFormatter.formatNewDemoRequestData(bookDemoRequestData);
-
-    // Create user entry in DB.
-    await this.demoRequestDAO.createDemoRequest(formattedBookDemoRequestData);
+    // Create demo request entry in DB.
+    await this.demoRequestDAO.createDemoRequest(bookDemoRequestData);
 
     return { message: 'Success' };
   };

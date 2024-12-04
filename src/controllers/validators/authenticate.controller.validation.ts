@@ -35,7 +35,7 @@ export const userSignupBodyParser = z.object({
     .string({ required_error: 'Email is required!' })
     .email()
     .min(5, 'Email must be at least 5 characters long')
-    .max(35, 'Email must be at most 25 characters long'),
+    .max(35, 'Email must be at most 35 characters long'),
   phone_number: z.string().regex(phoneNumberRegex, 'Invalid phone number!').optional(),
   school_ids: z.string().array().min(1),
 });
