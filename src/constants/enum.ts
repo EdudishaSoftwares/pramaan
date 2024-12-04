@@ -10,3 +10,10 @@ export enum UserIdentifier {
   UserId = 'user_id',
   MongoId = '_id',
 }
+
+export enum BoardAffiliationType {
+  CBSE = 'CBSE',
+  ICSE = 'ICSE',
+  State = 'State',
+  International = 'International',
+}

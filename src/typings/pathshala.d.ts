@@ -1,13 +1,17 @@
+import { BoardAffiliationType } from '@/constants/enum';
+
+export interface IAddress {
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string;
+  postalCode: string;
+}
+
 export interface ISchool {
   name: string;
-  address: {
-    line1: string;
-    line2?: string;
-    city: string;
-    state: string;
-    postalCode: string;
-  };
-  boardAffiliation: 'CBSE' | 'ICSE' | 'State' | 'International';
+  address: IAddress;
+  boardAffiliation: BoardAffiliationType;
   boardAffiliationNumber: string;
   establishmentYear: number;
   contactInfo: {
