@@ -1,16 +1,8 @@
-import { Schema, Document } from 'mongoose';
+import { Schema } from 'mongoose';
 import { MONGO_CONNECTION_INSTANCES } from '@/databases';
+import { IDemoRequestSchema } from '@/interfaces/demoRequest.interface';
 
 const dbConnection = MONGO_CONNECTION_INSTANCES.pramaan;
-
-// Define the DemoRequest schema
-interface IDemoRequestSchema extends Document {
-  first_name: string;
-  last_name: string;
-  email: string;
-  message: string;
-  preffered_date: Date;
-}
 
 // Create the DemoRequest schema
 const demoRequest = new Schema<IDemoRequestSchema>(

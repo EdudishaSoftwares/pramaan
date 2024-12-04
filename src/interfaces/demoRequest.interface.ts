@@ -3,5 +3,5 @@ export interface IDemoRequestSchema {
   last_name: string;
   email: string;
   preffered_date: Date;
-  message: string | undefined;
+  message?: string;
 }

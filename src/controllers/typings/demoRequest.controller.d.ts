@@ -6,6 +6,6 @@ import * as demoRequestControllerValidator from '@/controllers/validators/demoRe
 import { z } from 'zod';
 
 /**
- * naming convention - {controller_method_name_in_CapitalizeCase}${RequestBody/RequestParams/RequestQuery}
+ * naming convention - {controller_method_name_in_camelCase}${RequestBody/RequestParams/RequestQuery}
  */
 export type bookDemoRequestBody = z.infer<typeof demoRequestControllerValidator.bookDemoRequestBodyParser>;
