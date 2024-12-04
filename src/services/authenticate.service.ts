@@ -8,6 +8,8 @@ import { UserIdentifier } from '@/constants/enum';
 import UserDAO from '@/dao/user.dao';
 import SessionDAO from '@/dao/session.dao';
 import OtpDAO from '@/dao/otp.dao';
+// Https
+import PathshalaInternal from '@/https/pathshala.http';
 // Exceptions
 import { HandledError } from '@/exceptions/HandledError';
 // Helpers
@@ -29,6 +31,19 @@ class AuthenticateService {
   private emailHelper = new EmailHelper();
   // Formatters
   private authenticateFormatter = new AuthenticateFormatter();
+  // Https
+  private pathshalaInternal = new PathshalaInternal();
+
+  /**
+   * Fetching school by calling pathshala service
+   * @param {string} domain containing the identifier for fetching the school details
+   */
+  public initialUserRequest = async (domain?: string) => {
+    if (!domain) {
+      throw new HandledError('Domain not found', 412);
+    }
+    return await this.pathshalaInternal.getSchoolDetailByDomainName(domain);
+  };
 
   /**
    * Validate user data and create new user entry in DB.

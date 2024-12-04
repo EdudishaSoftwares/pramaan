@@ -10,6 +10,28 @@ class AuthenticateController {
   private authenticateService = new AuthenticateService();
 
   /**
+   * Retrive to fetch data of school and user on landing page
+   * - Called from client application after client signup
+   * - Http Call: Calls pathshala for fetching school details
+   * ```
+   * POST: /api/v1/platform/user
+   * ```
+   * @param req - The HTTP request object containing the user's login details.
+   * @param res - The HTTP response object used to send the response back to the client.
+   */
+  public initialUser = async (req: Request, res: Response) => {
+    const domain = req.get('host');
+    const schoolDetails = await this.authenticateService.initialUserRequest(domain);
+
+    const response = {
+      user: req.actor,
+      school_details: schoolDetails,
+    };
+
+    return res.status(200).json(response);
+  };
+
+  /**
    * Handles user singup requests.
    * - Called From: Client application for user signup.
    * - DAOs: UserDAO to create new user.

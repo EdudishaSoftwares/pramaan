@@ -32,7 +32,14 @@ class ExternalRoute implements Routes {
 
   constructor() {
     this.initializeAuthRoutes(`${this.path}/auth`);
+    this.initializeUserRoutes(`${this.path}/user`);
+
     this.initializeSchoolRoutes(`${this.path}/school`);
+  }
+
+  private initializeUserRoutes(prefix: string) {
+    // POST
+    this.router.post(`${prefix}/`, this.sessionMiddleware.validate, asyncWrapper(this.authenticateController.initialUser));
   }
 
   private initializeAuthRoutes(prefix: string) {
