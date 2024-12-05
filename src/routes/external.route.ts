@@ -83,7 +83,11 @@ class ExternalRoute implements Routes {
       this.validatorMiddleware.validateRequestBody(this.passwordValidators.updatePasswordSchema),
       asyncWrapper(this.passwordController.updatePassword),
     );
-    this.router.post(`${prefix}/forgot`, asyncWrapper(this.passwordController.sendForgotPasswordLink));
+    this.router.post(
+      `${prefix}/forgot`,
+      this.validatorMiddleware.validateRequestBody(this.passwordValidators.sendForgotPasswordLinkSchema),
+      asyncWrapper(this.passwordController.sendForgotPasswordLink),
+    );
     this.router.post(
       `${prefix}/reset`,
       this.validatorMiddleware.validateRequestBody(this.passwordValidators.resetPasswordSchema),

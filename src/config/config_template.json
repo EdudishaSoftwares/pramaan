@@ -20,6 +20,9 @@
   "services": {
     "pathshala_service": "http://localhost:3005/pathshala/api/v1/internal"
   },
+  "sentry": {
+    "dsn": ""
+  },
   "email": {
     "user": "",
     "pass": "",
