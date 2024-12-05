@@ -18,6 +18,7 @@ class SchoolController {
   private schoolService = new SchoolService();
 
   /**
+   * @deprecated moved to pathshala
    * Handles School Creation Request.
    * - Called From: Script.
    * - DAOs: SchoolDao to create new school.
@@ -29,8 +30,8 @@ class SchoolController {
    */
   public createSchool = async (req: Request<{}, {}, createSchoolRequestBody>, res: Response) => {
     const schoolData = req.body;
-    const createdSchool = await this.schoolService.createSchool(schoolData);
-    return res.status(201).json(createdSchool);
+    await this.schoolService.createSchool(schoolData);
+    return res.sendformat({ message: 'Success' });
   };
 }
 

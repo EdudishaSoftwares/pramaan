@@ -18,11 +18,12 @@
     "port": 3004
   },
   "services": {
-    "attendence_service": "service link"
+    "pathshala_service": "http://localhost:3005/pathshala/api/v1/internal"
   },
   "email": {
     "user": "",
-    "pass": ""
+    "pass": "",
+    "max_allowed_emails": 0
   },
   "max_allowed_session": 3
 }

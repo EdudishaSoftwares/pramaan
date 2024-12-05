@@ -4,7 +4,7 @@ import { generateUniqueUserId } from '@/utils/auth.utils';
 import { ROLE, USER_TYPE } from '@/constants/user';
 
 const DB_CONNECTION_STRING = 'mongodb://localhost:27017/pramaan';
-const SCHOOL_API_URL = 'http://localhost:3004/pramaan/api/v1/platform/school/create';
+const SCHOOL_API_URL = 'http://localhost:3005/pathshala/api/v1/internal/school/create';
 const SIGNUP_API_URL = 'http://localhost:3004/pramaan/api/v1/platform/auth/signup';
 const LOGIN_API_URL = 'http://localhost:3004/pramaan/api/v1/platform/auth/login';
 

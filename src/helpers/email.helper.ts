@@ -19,8 +19,8 @@ class EmailHelper {
     });
   }
 
-  public sendUpdatePasswordLink = async (to: string, resetPasswordLink: string) => {
-    return await this.transporter.sendMail({
+  public sendUpdatePasswordLink = (to: string, resetPasswordLink: string) => {
+    return this.transporter.sendMail({
       from: email.user,
       to,
       subject: 'Reset Password Link - Expires in 10 minutes.',

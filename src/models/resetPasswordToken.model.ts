@@ -16,6 +16,10 @@ const resetPasswordTokenSchema = new Schema<IResetPasswordTokenSchema>(
     token: { type: String, required: true, unique: true },
     // Token expiry time
     expires_at: { type: Date, required: true },
+    // Total attempts/retries
+    email_attempts: { type: Number, default: 0 },
+    // Block Until Time
+    blocked_until: { type: Date, default: null },
   },
   {
     // To track createdAt and updatedAt fields

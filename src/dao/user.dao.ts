@@ -6,6 +6,7 @@ import { UserIdentifier } from '@/constants/enum';
 import { IUserSchema } from '@/interfaces/user.interface';
 // Typngs
 import { CreateUserInDb } from '@/typings/authenticate';
+import { ObjectId } from 'mongoose';
 
 class UserDAO {
   // Model
@@ -62,7 +63,7 @@ class UserDAO {
    * @param {string} userId
    * @param {string} password
    */
-  public async updateUserPassword(userId: string, password: string): Promise<void> {
+  public async updateUserPassword(userId: string | ObjectId, password: string): Promise<void> {
     await this.userModel.updateOne({ _id: userId, is_active: true }, { password });
   }
 }

@@ -8,6 +8,8 @@ import { UserIdentifier } from '@/constants/enum';
 import UserDAO from '@/dao/user.dao';
 import SessionDAO from '@/dao/session.dao';
 import OtpDAO from '@/dao/otp.dao';
+// Https
+import PathshalaInternal from '@/https/pathshala.http';
 // Exceptions
 import { HandledError } from '@/exceptions/HandledError';
 // Helpers
@@ -29,6 +31,19 @@ class AuthenticateService {
   private emailHelper = new EmailHelper();
   // Formatters
   private authenticateFormatter = new AuthenticateFormatter();
+  // Https
+  private pathshalaInternal = new PathshalaInternal();
+
+  /**
+   * Fetching school by calling pathshala service
+   * @param {string} domain containing the identifier for fetching the school details
+   */
+  public initialUserRequest = async (domain?: string) => {
+    if (!domain) {
+      throw new HandledError('Domain not found', 412);
+    }
+    return await this.pathshalaInternal.getSchoolDetailByDomainName(domain);
+  };
 
   /**
    * Validate user data and create new user entry in DB.
@@ -47,12 +62,13 @@ class AuthenticateService {
 
   /**
    * Authenticates a user based on the provided identifier (either phone number, email, or user ID)
-   * and password. If the authentication is successful, a new session is created and a session token
+   * and password.
+   * If the authentication is successful, a new session is created and a session token
    * is returned along with the user's details (excluding the password).
    * @param {string} identifier - A string that can be a 10-digit phone number, an email address, or a user ID
    * used to identify the user.
    * @param {string} password - A string representing the user's password that needs to be validated.
-   * @returns An object containing the session token, expiration date, and user details
+   * @returns An object containing the session token, maxAge, and user details
    * (excluding the password), or an error message if authentication fails.
    */
   public async userLogin(identifier: string, password: string) {
@@ -78,8 +94,8 @@ class AuthenticateService {
 
     return {
       sessionToken,
-      expiresAt,
       user: R.omit(['password'], user),
+      maxAge: expiresAt.getTime() - Date.now(),
     };
   }
 
@@ -119,7 +135,7 @@ class AuthenticateService {
     });
 
     await this.emailHelper.sendOtpEmail(user.email, otp);
-    return { message: 'OTP sent to your email' };
+    return;
   }
 
   /**
@@ -159,7 +175,6 @@ class AuthenticateService {
    */
   public async validateSession(sessionToken: string) {
     const session = await this.sessionDAO.findBySessionToken(sessionToken);
-    console.log(sessionToken, '=========', session);
     if (!session || session.expiresAt < new Date()) {
       throw new Error('Session expired or invalid');
     }

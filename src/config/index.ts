@@ -1,6 +1,6 @@
 import nconf from 'nconf';
 
-import { IApmService, IConfigOptional, IDatabase, IEmailConfig, IServer, IServices } from '@/typings/config';
+import { IApmService, IConfigOptional, IDatabase, IEmailConfig, ISentry, IServer, IServices } from '@/typings/config';
 
 /**
  * Return all the config from this file only
@@ -42,4 +42,5 @@ export const maxAllowedSessions = (() => {
   return nconf.get('max_allowed_sessions') as number;
 })();
 
+export const sentry = nconf.get('sentry') as ISentry;
 export default config;
