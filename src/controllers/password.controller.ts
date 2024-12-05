@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import PasswordService from '@/services/password.service';
 import { resetPasswordRequestBody, sendForgotPasswordLinkRequestBody, updatePasswordRequestBody } from './typings/password.controller';
 
-export class PasswordController {
+class PasswordController {
   private passwordService = new PasswordService();
 
   /**
@@ -62,3 +62,5 @@ export class PasswordController {
     return res.sendformat({ message: 'Success' });
   };
 }
+
+export default PasswordController;

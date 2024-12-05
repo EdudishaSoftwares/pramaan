@@ -3,7 +3,7 @@ import { Router } from 'express';
 // Controllers
 import AuthenticateController from '@/controllers/authenticate.controller';
 import SchoolController from '@/controllers/school.controller';
-import { PasswordController } from '@/controllers/password.controller';
+import PasswordController from '@/controllers/password.controller';
 // Interfaces
 import { Routes } from '@/interfaces/routes.interface';
 // Middlewares
