@@ -10,8 +10,9 @@ const demoRequest = new Schema<IDemoRequestSchema>(
     first_name: { type: String, required: true },
     last_name: { type: String, required: true },
     email: { type: String, required: true },
+    phone_number: { type: String, required: true },
     message: { type: String },
-    preffered_date: { type: Date, required: true },
+    meeting_date: { type: Date },
   },
   {
     timestamps: true,
