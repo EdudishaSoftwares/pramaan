@@ -1,6 +1,7 @@
+// Typings
+import { ObjectId } from 'mongoose';
 // Constants
 import { ROLE, USER_TYPE } from '@/constants/user';
-import { ObjectId } from 'mongoose';
 
 export interface IUserSchema {
   _id: string;

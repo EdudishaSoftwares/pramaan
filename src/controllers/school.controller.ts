@@ -30,8 +30,8 @@ class SchoolController {
    */
   public createSchool = async (req: Request<{}, {}, createSchoolRequestBody>, res: Response) => {
     const schoolData = req.body;
-    const createdSchool = await this.schoolService.createSchool(schoolData);
-    return res.status(201).json(createdSchool);
+    await this.schoolService.createSchool(schoolData);
+    return res.sendformat({ message: 'Success' });
   };
 }
 

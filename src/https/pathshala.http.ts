@@ -16,7 +16,10 @@ export default class PathshalaInternal {
    * @param {string} domain - identifier for fetching school details
    */
   public getSchoolDetailByDomainName = async (domain: string): Promise<ISchool> => {
-    return await fetch(`${this.pathshalaService}/school?identifier=${JSON.stringify({ domain })}`, {
+    const queryParams = new URLSearchParams({ identifier: JSON.stringify({ domain }) }).toString();
+    const url = `${this.pathshalaService}/school?${queryParams}`;
+    console.log(url);
+    return await fetch(url, {
       method: RequestMethodEnum.GET,
     }).then(res => res.json());
   };

@@ -28,7 +28,7 @@ class AuthenticateController {
       school_details: schoolDetails,
     };
 
-    return res.status(200).json(response);
+    return res.sendformat(response);
   };
 
   /**
@@ -57,7 +57,7 @@ class AuthenticateController {
 
     await this.authenticateService.userSignup(userSignupData);
 
-    res.status(200).json({ message: 'Success' });
+    res.sendformat({ message: 'Success' });
   };
 
   /**
@@ -78,14 +78,14 @@ class AuthenticateController {
 
     const loginResult = await this.authenticateService.userLogin(identifier, password);
 
-    const { sessionToken, expiresAt, user } = loginResult;
-    const maxAge = expiresAt ? expiresAt.getTime() - Date.now() : undefined;
+    const { sessionToken, user, maxAge } = loginResult;
 
-    //SETTING COOKIES AND HEADERS REQUIRED FOR OTHER APIS (FE SHOULD  NESSARY SEND THIS AS HEADERS IN EVERY API CALLS)
+    //Setting cookies and headers usefull for other Apis
+    //F.E should necessarily send this headers in every api calls
     res.cookie('session_token', sessionToken, { maxAge });
     res.setHeader('edu_usertype', user?.user_type || 'user');
     res.setHeader('edu_role', user?.role || 'student');
-    return res.status(200).json({ user, sessionToken });
+    return res.sendformat({ user, sessionToken });
   };
 
   /**
@@ -102,8 +102,8 @@ class AuthenticateController {
    */
   public sendOtp = async (req: Request<{}, {}, sendOtpRequestBody>, res: Response) => {
     const { email } = req.body;
-    const result = await this.authenticateService.sendOtp(email);
-    return res.status(200).json(result);
+    await this.authenticateService.sendOtp(email);
+    return res.sendformat({ message: 'OTP sent to your email' });
   };
 
   /**
@@ -123,12 +123,7 @@ class AuthenticateController {
 
     const validationResult = await this.authenticateService.validateSession(sessionToken);
 
-    const { session, user } = validationResult;
-
-    return res.status(200).json({
-      session,
-      user,
-    });
+    return res.sendformat(validationResult);
   };
 
   /**
@@ -145,7 +140,7 @@ class AuthenticateController {
   public verifyOtp = async (req: Request<{}, {}, verifyOtpRequestBody>, res: Response) => {
     const { email, otp } = req.body;
     const user = await this.authenticateService.verifyOtp(email, otp);
-    return res.status(200).json({ message: 'OTP verified successfully', user });
+    return res.sendformat({ message: 'OTP verified successfully', user });
   };
 
   /**
@@ -162,7 +157,7 @@ class AuthenticateController {
     const sessionToken = req.cookies['session_token'] || req.headers['session-token'];
     await this.authenticateService.logout(sessionToken);
     res.clearCookie('session_token');
-    return res.status(200).json({ message: 'Logged out successfully' });
+    return res.sendformat({ message: 'Success' });
   };
 }
 
