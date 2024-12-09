@@ -22,7 +22,12 @@ const userProfileSchema: Schema<IUserSchema> = new Schema(
     // User email will be unique.
     email: { type: String, unique: true, required: true },
     // Role will define the user's privleges and access.
-    role: { type: String, enum: ['super_admin', 'admin', 'student'], required: true },
+    role: [{ type: Schema.Types.ObjectId, ref: 'Role', required: true }],
+    // Attributes
+    attributes: {
+      type: Map,
+      of: String, // Key-value pairs for dynamic attributes
+    },
     // User type defines if the user is an end-user or from our system.
     user_type: { type: String, enum: ['system', 'user'], required: true },
     // IDs of schools the user is part of.

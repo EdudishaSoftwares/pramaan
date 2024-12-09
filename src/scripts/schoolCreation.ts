@@ -15,7 +15,7 @@ const admin = {
   last_name: 'Khulge',
   profile_picture:
     'https://img.freepik.com/free-photo/young-adult-enjoying-virtual-date_23-2149328221.jpg?t=st=1729603371~exp=1729606971~hmac=85f9e8cbd2d0704b92cf4a213b259309ad2898aace468b53d71866c98c5a85e2&w=360',
-  password: 'password@123',
+  password: 'Password@123',
   email: 'pratikkhulge@gmail.com',
   role: ROLE.super_admin,
   user_type: USER_TYPE.system,
@@ -42,6 +42,7 @@ const schoolPayload = {
     email: ['contact@east.dpsbangalore.edu.in', 'admissions@east.dpsbangalore.edu.in'],
   },
   principalName: 'Mr. Sharma',
+  domain: 'localhost:3004',
 };
 
 // Users to insert

@@ -1,7 +1,7 @@
 // Typings
 import { ObjectId } from 'mongoose';
 // Constants
-import { ROLE, USER_TYPE } from '@/constants/user';
+import { USER_TYPE } from '@/constants/user';
 
 export interface IUserSchema {
   _id: string;
@@ -11,7 +11,8 @@ export interface IUserSchema {
   profile_picture?: string;
   password: string;
   email: string;
-  role: ROLE;
+  role: string[];
+  attributes?: Record<string, string>;
   user_type: USER_TYPE;
   school_ids?: string[];
   is_active: boolean;

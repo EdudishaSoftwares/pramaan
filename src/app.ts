@@ -79,7 +79,12 @@ class App {
     this.app.use(bodyParser.json({ limit: '50mb' }));
     this.connectToDatabase();
     this.initializeSendFormatToRes();
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        origin: true,
+        credentials: true,
+      }),
+    );
     this.app.use(helmet());
     this.app.use(compression());
     this.app.use(express.json());
