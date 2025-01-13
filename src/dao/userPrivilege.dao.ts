@@ -8,9 +8,6 @@ class UserPrivilegeDAO {
    * @param privilege - The privilege to fetch.
    */
   public getUserPrivileges = async (userId: string, privilege: string) => {
-    console.log('===================================');
-    console.log(userId, privilege);
-    console.log('===================================');
     return await UserPrivilegeModel.find({
       user: userId,
       privilege,

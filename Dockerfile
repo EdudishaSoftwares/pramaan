@@ -23,7 +23,7 @@ RUN npm install
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy configuration files
-COPY config/* /home/ubuntu/github_repos/pramaan/src/config/
+COPY config/* /home/ubuntu/github_repos/pramaan/dist/config/
 
 # Expose the port your app listens to
 EXPOSE 3004
