@@ -71,7 +71,7 @@ class AuthenticateService {
    * @returns An object containing the session token, maxAge, and user details
    * (excluding the password), or an error message if authentication fails.
    */
-  public async userLogin(identifier: string, password: string) {
+  public userLogin = async (identifier: string, password: string) => {
     // Find user based on identifier (phone_number, email, user_id)
     const user = await this.userDAO.findByIdentifier(getUserIdentifierType(identifier), identifier);
 
@@ -97,7 +97,7 @@ class AuthenticateService {
       user: R.omit(['password'], user),
       maxAge: expiresAt.getTime() - Date.now(),
     };
-  }
+  };
 
   /**
    * The function first checks if the user exists. If an existing valid OTP is found, it is resent.
@@ -106,7 +106,7 @@ class AuthenticateService {
    * @returns An object containing a message indicating the status of the OTP request and the OTP itself if sent.
    * @throws HandledError if the user is not found or if other issues occur during OTP generation or sending.
    */
-  public async sendOtp(email: string) {
+  public sendOtp = async (email: string) => {
     const user = await this.userDAO.findByIdentifier(UserIdentifier.Email, email);
 
     if (!user) {
@@ -115,8 +115,9 @@ class AuthenticateService {
 
     // Check for an existing valid OTP
     const existingOtp = await this.otpDAO.findValidOtp(user._id);
+    console.dir(existingOtp);
     if (existingOtp) {
-      await this.emailHelper.sendOtpEmail(user.email, existingOtp.otp);
+      this.emailHelper.sendOtpEmail(user.email, existingOtp.otp, user.first_name);
       return { message: 'OTP resent to your email', otp: existingOtp.otp };
     }
 
@@ -134,9 +135,9 @@ class AuthenticateService {
       expiresAt,
     });
 
-    await this.emailHelper.sendOtpEmail(user.email, otp);
+    this.emailHelper.sendOtpEmail(user.email, otp, user.first_name);
     return;
-  }
+  };
 
   /**
    * Verifies OTP based on the provided identifier (email, phone, or user ID).
@@ -144,7 +145,7 @@ class AuthenticateService {
    * @param otp - A string representing the OTP to be validated.
    * @returns The user details if OTP is valid.
    */
-  public async verifyOtp(email: string, otp: string) {
+  public verifyOtp = async (email: string, otp: string) => {
     const user = await this.userDAO.findByIdentifier(UserIdentifier.Email, email);
     if (!user) {
       throw new HandledError('User not found', 404);
@@ -163,7 +164,7 @@ class AuthenticateService {
     await this.otpDAO.markOtpAsUsed(otpRecord._id);
 
     return R.omit(['password'], user);
-  }
+  };
 
   /**
    * Validates a session based on the provided session token.
@@ -173,7 +174,7 @@ class AuthenticateService {
    * @returns An object containing the session and user details if the session is valid,
    * or an error if the session is invalid or expired.
    */
-  public async validateSession(sessionToken: string) {
+  public validateSession = async (sessionToken: string) => {
     const session = await this.sessionDAO.findBySessionToken(sessionToken);
     if (!session || session.expiresAt < new Date()) {
       throw new Error('Session expired or invalid');
@@ -187,14 +188,14 @@ class AuthenticateService {
       session,
       user: R.omit(['password'], user),
     };
-  }
+  };
 
   /**
    * Logs out the user by deleting the session from the database.
    * @param sessionToken - The session token of the user to be logged out.
    * @returns A promise indicating the success of the operation.
    */
-  public async logout(sessionToken: string) {
+  public logout = async (sessionToken: string) => {
     //May be optional or not needed. Done to just cater any edge cases
     const session = await this.sessionDAO.findBySessionToken(sessionToken);
 
@@ -203,7 +204,7 @@ class AuthenticateService {
     }
 
     await this.sessionDAO.deleteSession(sessionToken);
-  }
+  };
 }
 
 export default AuthenticateService;

@@ -19,7 +19,7 @@ class UserDAO {
    * @returns
    */
   public getUserDataByUserId = async <T extends keyof IUserSchema>(userId: string, fields: T[] = []): Promise<Pick<IUserSchema, T> | null> => {
-    return this.userModel.findOne({ _id: userId, is_active: true }).select(fields);
+    return this.userModel.findOne({ _id: userId, is_active: true }).select(fields).lean();
   };
 
   /**
@@ -37,7 +37,7 @@ class UserDAO {
     const query: Record<string, string> = {};
     query[key] = value;
 
-    return this.userModel.findOne({ ...query, is_active: true }).select(fields);
+    return this.userModel.findOne({ ...query, is_active: true }).select(fields).lean();
   };
 
   /**
@@ -45,27 +45,27 @@ class UserDAO {
    * @param {CreateUserInDb} userData
    * @returns
    */
-  public async createUser(userData: CreateUserInDb): Promise<IUserSchema> {
+  public createUser = async (userData: CreateUserInDb): Promise<IUserSchema> => {
     return this.userModel.create(userData);
-  }
+  };
 
   /**
    * Update user's last active time.
    * @param {string} userId
    * @param {Date} lastActive
    */
-  public async updateUserLastActive(userId: string, lastActive: Date): Promise<void> {
+  public updateUserLastActive = async (userId: string, lastActive: Date): Promise<void> => {
     await this.userModel.updateOne({ _id: userId, is_active: true }, { last_active: lastActive });
-  }
+  };
 
   /**
    * Update user's password.
    * @param {string} userId
    * @param {string} password
    */
-  public async updateUserPassword(userId: string | ObjectId, password: string): Promise<void> {
+  public updateUserPassword = async (userId: string | ObjectId, password: string): Promise<void> => {
     await this.userModel.updateOne({ _id: userId, is_active: true }, { password });
-  }
+  };
 }
 
 export default UserDAO;

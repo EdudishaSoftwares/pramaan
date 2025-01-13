@@ -7,7 +7,7 @@ class UserPrivilegeDAO {
    * @param userId - The ID of the user.
    * @param privilege - The privilege to fetch.
    */
-  public async getUserPrivileges(userId: string, privilege: string) {
+  public getUserPrivileges = async (userId: string, privilege: string) => {
     console.log('===================================');
     console.log(userId, privilege);
     console.log('===================================');
@@ -19,27 +19,27 @@ class UserPrivilegeDAO {
         { start_time: { $lte: new Date() }, end_time: null },
         { start_time: null, end_time: null },
       ],
-    }).lean();
-  }
+    });
+  };
 
   /**
    * Checks if a user has a specific role.
    * @param userId - The ID of the user.
    * @param role - The role to check.
    */
-  public async userHasRole(userId: string, role: string) {
-    const user = await UserModel.findById(userId).populate('role').lean();
+  public userHasRole = async (userId: string, role: string) => {
+    const user = await UserModel.findById(userId).populate('role');
     return user?.role.some((r: any) => r.name === role);
-  }
+  };
 
   /**
    * Fetches the attributes of a user.
    * @param userId - The ID of the user.
    */
-  public async getUserAttributes(userId: string) {
-    const user = await UserModel.findById(userId).lean();
+  public getUserAttributes = async (userId: string) => {
+    const user = await UserModel.findById(userId);
     return user?.attributes || {};
-  }
+  };
 }
 
 export default UserPrivilegeDAO;

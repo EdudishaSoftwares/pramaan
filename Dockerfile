@@ -1,20 +1,36 @@
-# Getting base image from DockerHub
-FROM node:14.17.0-alpine
+# Base image: Use the latest LTS Node.js version (with Alpine)
+FROM node:18-alpine AS development-build-stage
 
-#Defineing Working Directory
-WORKDIR /home/ubuntu/github_repos/<project_service_name>
+# Define working directory
+WORKDIR /home/ubuntu/github_repos/pramaan
 
-# Copying source code to Image in /user/app directory
-COPY . /home/ubuntu/github_repos/<project_service_name>
+# Copy project files to the container (excluding node_modules and package-lock.json)
+COPY . /home/ubuntu/github_repos/pramaan
 
-# Install Git before next command as it need git
+# # Remove package-lock.json and node_modules to ensure a clean install
+# RUN rm -rf node_modules package-lock.json
+
+# Install PM2 globally
 RUN npm install pm2 -g
 
-# Install git
+# Install git for any required commands
 RUN apk add git
 
-# Exposing TCP Protocol
-EXPOSE 3015
+# Install npm dependencies (fresh install after removing node_modules and package-lock.json)
+RUN npm install
 
-#Running NPM Start command to run node application
-CMD ["pm2-runtime", "ecosystem.config.js", "--env", "production"]
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copy configuration files
+COPY config/* /home/ubuntu/github_repos/pramaan/src/config/
+
+# Expose the port your app listens to
+EXPOSE 3004
+
+# Set environment variables
+ARG DOCKER_ENV=development
+ENV NODE_ENV=${DOCKER_ENV}
+
+# Run the app using PM2
+CMD ["pm2-runtime", "ecosystem.config.js", "--env", "development"]

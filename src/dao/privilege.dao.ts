@@ -6,7 +6,7 @@ class PrivilegeDAO {
    * @param privilege - The privilege to fetch policies for.
    */
   public getPrivilege = async (privilege: string) => {
-    const result = await PrivilegeModel.findOne({ name: privilege }).lean();
+    const result = await PrivilegeModel.findOne({ name: privilege });
     return result?._id;
   };
 }

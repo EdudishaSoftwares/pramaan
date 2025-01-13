@@ -21,11 +21,18 @@ const mongoConnectionInstances: Record<string, mongoose.Connection> = {};
  * @param dbConfig
  * @returns {string}
  */
-const getConnectionURL = (dbConfig: IDatabaseClient) =>
-  `${dbConfig.client}://${[
+const getConnectionURL = (dbConfig: IDatabaseClient) => {
+  console.log(
+    `${dbConfig.client}://${[
+      `${dbConfig.connection.host}:${dbConfig.connection.port}`,
+      ...(isProduction ? (dbConfig.replicas || []).map(connection => `${connection.host}:${connection.port}`) : []),
+    ].join(',')}/${dbConfig.connection.name}`,
+  );
+  return `${dbConfig.client}://${[
     `${dbConfig.connection.host}:${dbConfig.connection.port}`,
     ...(isProduction ? (dbConfig.replicas || []).map(connection => `${connection.host}:${connection.port}`) : []),
   ].join(',')}/${dbConfig.connection.name}`;
+};
 
 /**
  * returns db connection

@@ -1,6 +1,6 @@
 import nconf from 'nconf';
 
-import { IApmService, IConfigOptional, IDatabase, IEmailConfig, ISentry, IServer, IServices } from '@/typings/config';
+import { IApmService, IConfigOptional, IDatabase, IEmailConfig, ISentry, IServer, IServices } from '../src/typings/config';
 
 /**
  * Return all the config from this file only
@@ -8,7 +8,7 @@ import { IApmService, IConfigOptional, IDatabase, IEmailConfig, ISentry, IServer
 
 const env = 'development';
 const isProduction = false;
-const filePath = env === 'development' ? `src/config/config.${env}.json` : `dist/config/config.${env}.json`;
+const filePath = env === 'development' ? `src/config/config.development.json` : `dist/config/config.development.json`;
 
 nconf.argv().env().file({ file: filePath });
 

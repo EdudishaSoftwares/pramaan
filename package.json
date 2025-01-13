@@ -16,7 +16,10 @@
     "prettify": "npx prettier --write --ignore-unknown --cache --cache-location=node_modules/.cache/shopdeck_codebase_prettier_cached_file src/",
     "deploy:prod": "npm run build && pm2 start ecosystem.config.js --only production",
     "deploy:dev": "npm run build && pm2 start ecosystem.config.js --only dev",
-    "deploy:staging": "npm run build && pm2 start ecosystem.config.js --only staging"
+    "deploy:staging": "npm run build && pm2 start ecosystem.config.js --only staging",
+    "script:school": "cross-env NODE_ENV=development node dist/scripts/schoolCreation.js",
+    "script:policy": "cross-env NODE_ENV=development node dist/scripts/policy.script.js",
+    "script:user": "cross-env NODE_ENV=development node dist/scripts/insertUserModalDummyData.js"
   },
   "dependencies": {
     "@sentry/node": "^4.6.6",

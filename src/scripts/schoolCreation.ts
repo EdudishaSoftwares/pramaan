@@ -5,6 +5,7 @@ import { ROLE, USER_TYPE } from '@/constants/user';
 
 const DB_CONNECTION_STRING = 'mongodb://localhost:27017/pramaan';
 const SCHOOL_API_URL = 'http://localhost:3005/pathshala/api/v1/internal/school/create';
+const GET_SCHOOL_API_URL = 'http://localhost:3005/pathshala/api/v1/internal/school/';
 const SIGNUP_API_URL = 'http://localhost:3004/pramaan/api/v1/platform/auth/signup';
 const LOGIN_API_URL = 'http://localhost:3004/pramaan/api/v1/platform/auth/login';
 
@@ -72,10 +73,22 @@ async function schoolCreationScript() {
     // Step 1: Check for existing school with the same boardAffiliationNumber
     console.log('=====================================');
     console.log('Phase 2: Checking for existing school...');
-    const existingSchool = await mongoose.connection.collection('schools').findOne({ boardAffiliationNumber: schoolPayload.boardAffiliationNumber });
+    const queryParams = new URLSearchParams({
+      identifier: JSON.stringify({ boardAffiliationNumber: schoolPayload.boardAffiliationNumber }),
+    }).toString();
+    const url = `${GET_SCHOOL_API_URL}?${queryParams}`;
+    const existingSchool = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    // const existingSchool = await mongoose.connection.collection('schools').findOne({ boardAffiliationNumber: schoolPayload.boardAffiliationNumber });
 
-    if (existingSchool) {
-      console.log(`School with boardAffiliationNumber ${schoolPayload.boardAffiliationNumber} already exists. School ID: ${existingSchool._id}`);
+    if (existingSchool.ok) {
+      const schoolDetails = await existingSchool.json();
+      console.dir(schoolDetails, { depth: 10 });
+      console.log(`School with boardAffiliationNumber ${schoolPayload.boardAffiliationNumber} already exists. School ID: ${schoolDetails._id}`);
       return;
     }
 

@@ -80,6 +80,7 @@ class PasswordService {
 
     // Verify user's school association with the domain
     const schoolDetails = await this.pathshalaInternal.getSchoolDetailByDomainName(domain);
+    console.log(schoolDetails.domain);
     // If user from different school try to access different school link
     if (!user.school_ids?.includes(schoolDetails._id)) {
       throw new HandledError('Unauthorized request: Invalid school', 403);
@@ -114,7 +115,7 @@ class PasswordService {
     // If token exists and is valid, resend the reset password link
     if (existingToken && existingToken.expires_at > moment().toDate()) {
       const resetPasswordLink = generateResetPasswordLink(schoolDetails.domain, existingToken.token);
-      await this.emailHelper.sendUpdatePasswordLink(user.email, resetPasswordLink);
+      await this.emailHelper.sendUpdatePasswordLink(user.email, resetPasswordLink, user.first_name);
       // Extend the coupon validity for next 10 minutes
       const tokenExpiresAt = moment().add(10, 'minutes').toDate();
       await this.resetPasswordTokenDao.updateAttemptsAndExpiredAt(user._id, emailAttempts, tokenExpiresAt);
@@ -129,7 +130,7 @@ class PasswordService {
 
     // Send reset password link
     const resetPasswordLink = generateResetPasswordLink(schoolDetails.domain, hashedResetPasswordToken);
-    this.emailHelper.sendUpdatePasswordLink(user.email, resetPasswordLink);
+    this.emailHelper.sendUpdatePasswordLink(user.email, resetPasswordLink, user.first_name);
   };
 
   /**
