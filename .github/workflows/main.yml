@@ -1,37 +1,16 @@
 on:
-  push:
-    branches:
-      - main
-      - stage
   pull_request:
     branches:
-      - main
-      - stage
-
+    - main
 jobs:
-  build_and_commit:
-    name: Build and Commit Dist Folder
+  validate_build:
+    name: Validates the build and coding standard
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: npm i
-
-      - name: Lint the code
-        run: npx eslint src/. --max-warnings=0
-
-      - name: Prettify the code
-        run: npm run prettify-check
-
-      - name: Build the project
-        run: npm run build
-
-      - name: Push built files to the repository
-        run: |
-          git config user.name "pratik-edu"
-          git config user.email "pratikkhulge@gmail.com"
-          git add dist/
-          git commit -m "Build: Add updated dist folder"
-          git push
-        if: ${{ github.ref == 'refs/heads/main' }}
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: npm i
+    - name: Lint the code
+      run: npx eslint src/. --max-warnings=0
+    - name: Prettify the code
+      run: npm run prettify-check

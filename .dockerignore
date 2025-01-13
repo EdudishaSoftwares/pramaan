@@ -1,6 +1,5 @@
 # compiled output
 .vscode
-/src
 
 # code formatter
 .eslintrc
