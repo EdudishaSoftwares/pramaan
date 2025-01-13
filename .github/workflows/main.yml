@@ -2,9 +2,11 @@ on:
   push:
     branches:
       - main
+      - stage
   pull_request:
     branches:
       - main
+      - stage
 
 jobs:
   build_and_commit:
@@ -27,8 +29,8 @@ jobs:
 
       - name: Push built files to the repository
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          git config user.name "pratik-edu"
+          git config user.email "pratikkhulge@gmail.com"
           git add dist/
           git commit -m "Build: Add updated dist folder"
           git push
