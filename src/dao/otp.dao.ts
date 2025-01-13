@@ -10,11 +10,13 @@ class OtpDAO {
    * @param {string} userId - The userId is MongoId od UserDao used for ref.
    */
   public findValidOtp = async (userId: string) => {
-    return await this.otpModel.findOne({
-      user: userId,
-      isUsed: false,
-      expiresAt: { $gt: new Date() },
-    }).lean();
+    return await this.otpModel
+      .findOne({
+        user: userId,
+        isUsed: false,
+        expiresAt: { $gt: new Date() },
+      })
+      .lean();
   };
 
   /**

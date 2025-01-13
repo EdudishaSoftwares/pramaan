@@ -37,7 +37,10 @@ class UserDAO {
     const query: Record<string, string> = {};
     query[key] = value;
 
-    return this.userModel.findOne({ ...query, is_active: true }).select(fields).lean();
+    return this.userModel
+      .findOne({ ...query, is_active: true })
+      .select(fields)
+      .lean();
   };
 
   /**
