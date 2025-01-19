@@ -25,6 +25,15 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Copy configuration files
 COPY config/* /home/ubuntu/github_repos/pramaan/dist/config/
 
+# Create logs directory for PM2
+RUN mkdir -p logs
+
+# Build the application - THIS MUST COMPLETE BEFORE PM2 STARTS
+RUN npm run build
+
+# Verify the dist directory and server.js exist
+RUN ls -la dist && ls -la dist/server.js
+
 # Expose the port your app listens to
 EXPOSE 3004
 
