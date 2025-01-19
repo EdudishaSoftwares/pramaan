@@ -1,6 +1,14 @@
 # Base image: Use the latest LTS Node.js version (with Alpine)
 FROM node:18-alpine AS development-build-stage
 
+# Set environment variables
+ARG DOCKER_ENV
+ENV NODE_ENV=${DOCKER_ENV}
+
+# Validate NODE_ENV is provided
+RUN if [ -z "$NODE_ENV" ]; then echo "NODE_ENV not set" && exit 1; fi
+RUN echo "Building for environment: $NODE_ENV"
+
 # Define working directory
 WORKDIR /home/ubuntu/github_repos/pramaan
 
@@ -33,14 +41,10 @@ RUN npm run build
 
 # Verify the dist directory and server.js exist
 RUN ls -la dist && ls -la dist/server.js
-RUN ls -la src/config/config.development.json || echo "Config file missing!"
+RUN ls -la src/config/config.${NODE_ENV}.json || echo "Config file missing!"
 
 # Expose the port your app listens to
 EXPOSE 3004
 
-# Set environment variables
-ARG DOCKER_ENV=development
-ENV NODE_ENV=${DOCKER_ENV}
-
 # Run the app using PM2
-CMD ["pm2-runtime", "ecosystem.config.js", "--env", "development"]
+CMD ["pm2-runtime", "ecosystem.config.js", "--env", ${NODE_ENV}]
