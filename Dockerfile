@@ -5,7 +5,6 @@ FROM node:18-alpine AS development-build-stage
 ARG DOCKER_ENV
 ARG GITHUB_TOKEN
 ENV NODE_ENV=${DOCKER_ENV}
-ENV GITHUB_TOKEN=${GITHUB_TOKEN}
 
 # Validate NODE_ENV is provided
 RUN if [ -z "$NODE_ENV" ]; then echo "NODE_ENV not set" && exit 1; fi
@@ -20,10 +19,10 @@ COPY . /home/ubuntu/github_repos/pramaan
 # Install PM2 globally
 RUN npm install pm2 -g
 
-# Install git for any required commands
-RUN apk add git
+# Install git and nginx for any required commands
+RUN apk add --no-cache git nginx
 
-# Install npm dependencies (fresh install after removing node_modules and package-lock.json)
+# Install npm dependencies
 RUN npm install
 
 # Clone the secrets repository and checkout the specific branch based on DOCKER_ENV
@@ -31,6 +30,9 @@ RUN git clone -b ${NODE_ENV} https://${GITHUB_TOKEN}@github.com/pratik-edu/secre
 
 # Copy the app configuration file to the correct location
 RUN cp /tmp/config-repo/pramaan/config.json /home/ubuntu/github_repos/pramaan/src/config/config.${NODE_ENV}.json
+
+# Create /etc/nginx directory if not already present
+RUN mkdir -p /etc/nginx
 
 # Copy the Nginx configuration file to the correct location
 RUN cp /tmp/config-repo/pramaan/nginx.conf /etc/nginx/nginx.conf
