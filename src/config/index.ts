@@ -1,13 +1,13 @@
 import nconf from 'nconf';
 
-import { IApmService, IConfigOptional, IDatabase, IEmailConfig, IServer, IServices } from '@/typings/config';
+import { IApmService, IConfigOptional, IDatabase, IEmailConfig, ISentry, IServer, IServices } from '@/typings/config';
 
 /**
  * Return all the config from this file only
  */
 
-const env = process.env.NODE_ENV || 'development';
-const isProduction = env === 'production';
+const env = 'development';
+const isProduction = false;
 const filePath = env === 'development' ? `src/config/config.${env}.json` : `dist/config/config.${env}.json`;
 
 nconf.argv().env().file({ file: filePath });
@@ -42,4 +42,5 @@ export const maxAllowedSessions = (() => {
   return nconf.get('max_allowed_sessions') as number;
 })();
 
+export const sentry = nconf.get('sentry') as ISentry;
 export default config;

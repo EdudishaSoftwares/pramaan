@@ -7,7 +7,7 @@
 module.exports = {
   apps: [
     {
-      name: '<project_service_name>', // pm2 start App name
+      name: 'pramaan', // pm2 start App name
       script: 'dist/server.js',
       exec_mode: 'cluster', // 'cluster' or 'fork'
       instances: 1, // pm2 instance count
@@ -37,10 +37,27 @@ module.exports = {
     production: {
       user: 'user',
       host: '0.0.0.0',
-      ref: 'origin/master',
+      ref: 'origin/production',
       repo: 'git@github.com:repo.git',
       path: 'dist/server.js',
       'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --env production',
+    },
+    development: {
+      user: 'user',
+      host: 'localhost',
+      ref: 'origin/stage',
+      repo: 'git@github.com:repo.git',
+      path: 'dist/server.js',
+      'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --env development',
+      env: {
+        PORT: 3015,
+        NODE_ENV: 'development',
+      },
+      watch: true,
+      ignore_watch: ['node_modules', 'logs', '.git'],
+      watch_options: {
+        followSymlinks: false,
+      },
     },
   },
 };

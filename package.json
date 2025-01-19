@@ -5,7 +5,8 @@
   "author": "Pratik & Akshat",
   "license": "ISC",
   "scripts": {
-    "start": "npm run build && cross-env NODE_ENV=production node dist/server.js",
+    "start:prod": "npm run build && cross-env NODE_ENV=production node dist/server.js",
+    "start": "npm run build && cross-env NODE_ENV=development node dist/server.js",
     "dev": "cross-env NODE_ENV=development nodemon",
     "build": "swc src -d dist --source-maps --copy-files",
     "build:tsc": "tsc && tsc-alias",
@@ -16,7 +17,10 @@
     "prettify": "npx prettier --write --ignore-unknown --cache --cache-location=node_modules/.cache/shopdeck_codebase_prettier_cached_file src/",
     "deploy:prod": "npm run build && pm2 start ecosystem.config.js --only production",
     "deploy:dev": "npm run build && pm2 start ecosystem.config.js --only dev",
-    "deploy:staging": "npm run build && pm2 start ecosystem.config.js --only staging"
+    "deploy:staging": "npm run build && pm2 start ecosystem.config.js --only staging",
+    "script:school": "cross-env NODE_ENV=development node dist/scripts/schoolCreation.js",
+    "script:policy": "cross-env NODE_ENV=development node dist/scripts/policy.script.js",
+    "script:user": "cross-env NODE_ENV=development node dist/scripts/insertUserModalDummyData.js"
   },
   "dependencies": {
     "@sentry/node": "^4.6.6",
@@ -44,6 +48,7 @@
     "helmet": "^5.1.1",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.30.1",
     "mongoose": "^6.13.3",
     "mongoose-unique-validator": "^3.1.0",
     "morgan": "^1.10.0",

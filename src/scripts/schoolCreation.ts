@@ -4,7 +4,8 @@ import { generateUniqueUserId } from '@/utils/auth.utils';
 import { ROLE, USER_TYPE } from '@/constants/user';
 
 const DB_CONNECTION_STRING = 'mongodb://localhost:27017/pramaan';
-const SCHOOL_API_URL = 'http://localhost:3004/pramaan/api/v1/platform/school/create';
+const SCHOOL_API_URL = 'http://localhost:3005/pathshala/api/v1/internal/school/create';
+const GET_SCHOOL_API_URL = 'http://localhost:3005/pathshala/api/v1/internal/school/';
 const SIGNUP_API_URL = 'http://localhost:3004/pramaan/api/v1/platform/auth/signup';
 const LOGIN_API_URL = 'http://localhost:3004/pramaan/api/v1/platform/auth/login';
 
@@ -15,7 +16,7 @@ const admin = {
   last_name: 'Khulge',
   profile_picture:
     'https://img.freepik.com/free-photo/young-adult-enjoying-virtual-date_23-2149328221.jpg?t=st=1729603371~exp=1729606971~hmac=85f9e8cbd2d0704b92cf4a213b259309ad2898aace468b53d71866c98c5a85e2&w=360',
-  password: 'password@123',
+  password: 'Password@123',
   email: 'pratikkhulge@gmail.com',
   role: ROLE.super_admin,
   user_type: USER_TYPE.system,
@@ -42,6 +43,7 @@ const schoolPayload = {
     email: ['contact@east.dpsbangalore.edu.in', 'admissions@east.dpsbangalore.edu.in'],
   },
   principalName: 'Mr. Sharma',
+  domain: 'localhost:3004',
 };
 
 // Users to insert
@@ -71,10 +73,22 @@ async function schoolCreationScript() {
     // Step 1: Check for existing school with the same boardAffiliationNumber
     console.log('=====================================');
     console.log('Phase 2: Checking for existing school...');
-    const existingSchool = await mongoose.connection.collection('schools').findOne({ boardAffiliationNumber: schoolPayload.boardAffiliationNumber });
+    const queryParams = new URLSearchParams({
+      identifier: JSON.stringify({ boardAffiliationNumber: schoolPayload.boardAffiliationNumber }),
+    }).toString();
+    const url = `${GET_SCHOOL_API_URL}?${queryParams}`;
+    const existingSchool = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    // const existingSchool = await mongoose.connection.collection('schools').findOne({ boardAffiliationNumber: schoolPayload.boardAffiliationNumber });
 
-    if (existingSchool) {
-      console.log(`School with boardAffiliationNumber ${schoolPayload.boardAffiliationNumber} already exists. School ID: ${existingSchool._id}`);
+    if (existingSchool.ok) {
+      const schoolDetails = await existingSchool.json();
+      console.dir(schoolDetails, { depth: 10 });
+      console.log(`School with boardAffiliationNumber ${schoolPayload.boardAffiliationNumber} already exists. School ID: ${schoolDetails._id}`);
       return;
     }
 

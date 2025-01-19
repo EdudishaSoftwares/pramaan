@@ -40,9 +40,14 @@ export interface IServices {
   pathshala_service: string;
 }
 
+export interface ISentry {
+  dsn: string;
+}
+
 export interface IEmailConfig {
   user: string;
   pass: string;
+  max_allowed_emails: number;
 }
 export interface IConfig {
   NODE_ENV: string;

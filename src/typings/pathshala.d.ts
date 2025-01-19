@@ -9,6 +9,7 @@ export interface IAddress {
 }
 
 export interface ISchool {
+  _id: string;
   name: string;
   address: IAddress;
   boardAffiliation: BoardAffiliationType;

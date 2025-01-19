@@ -4,26 +4,29 @@ import cors from 'cors';
 import express, { NextFunction, Request, Response, Application } from 'express';
 import helmet from 'helmet';
 import { set } from 'mongoose';
-import swaggerJSDoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express';
-import config, { port, gcpRoute } from '@config';
+import * as Sentry from '@sentry/node';
+import config, { port, gcpRoute, sentry } from '@config';
 import { Routes } from '@/interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
-// import { logger } from '@utils/logger';
-// import * as Sentry from '@sentry/node';
 import bodyParser from 'body-parser';
 import { NotFoundError } from '@exceptions/NotFoundError';
-// import { Logger } from 'winston';
 
 const NODE_ENV = config.NODE_ENV;
 
 class App {
   public app: Application;
   public env: string;
+  public useSentry: boolean;
   public port: string | number;
   private routes: Routes[];
 
   constructor(routes: Routes[]) {
+    this.useSentry = !!sentry?.dsn;
+
+    if (this.useSentry) {
+      Sentry.init({ dsn: sentry.dsn });
+    }
+
     this.env = NODE_ENV || 'development';
     this.port = port || 3000;
     this.routes = routes;
@@ -53,6 +56,10 @@ class App {
   }
 
   private initializeMiddlewares() {
+    if (this.useSentry) {
+      // The request handler must be the first middleware on the app
+      this.app.use(Sentry.Handlers.requestHandler());
+    }
     /**
      * Override the x-forwarded-proto header with custom x-forwarded-proto header if needed.
      * When node instance is behind an ALB, the x-forwarded-proto is overriden with an incorrect scheme,
@@ -72,7 +79,12 @@ class App {
     this.app.use(bodyParser.json({ limit: '50mb' }));
     this.connectToDatabase();
     this.initializeSendFormatToRes();
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        origin: true,
+        credentials: true,
+      }),
+    );
     this.app.use(helmet());
     this.app.use(compression());
     this.app.use(express.json());
@@ -80,9 +92,12 @@ class App {
     this.app.use(cookieParser());
 
     this.initializeRoutes(this.routes);
-
-    //this.initializeSwagger();
     this.initializeErrorHandling();
+
+    if (this.useSentry) {
+      // The error handler must be before any other error middleware
+      this.app.use(Sentry.Handlers.errorHandler());
+    }
   }
 
   private initializeRoutes(routes: Routes[]) {
@@ -95,22 +110,6 @@ class App {
       const err = new NotFoundError(`API not Found: ${req.method} ${req.path}`);
       next(err);
     });
-  }
-
-  private initializeSwagger() {
-    const options = {
-      swaggerDefinition: {
-        info: {
-          title: 'REST API',
-          version: '1.0.0',
-          description: 'Example docs',
-        },
-      },
-      apis: ['swagger.yaml'],
-    };
-
-    const specs = swaggerJSDoc(options);
-    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
   }
 
   private initializeErrorHandling() {

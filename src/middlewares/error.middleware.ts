@@ -1,11 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-// import { logger } from '@utils/logger';
 import { HandledError } from '@/exceptions/HandledError';
-import { UserError } from '@/exceptions/UserError';
 import { NotFoundError } from '@/exceptions/NotFoundError';
 import { ZodError } from 'zod';
 import * as Sentry from '@sentry/node';
-// import { IExtendedError } from '@/typings/common';
 
 const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunction) => {
   try {
@@ -20,10 +17,6 @@ const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunc
             title: message,
           },
         ],
-      });
-    } else if (error instanceof UserError) {
-      return res.status(status).json({
-        error: message,
       });
     } else if (error instanceof ZodError) {
       return res.status(501).send({
