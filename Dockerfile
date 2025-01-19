@@ -47,4 +47,4 @@ RUN ls -la src/config/config.${NODE_ENV}.json || echo "Config file missing!"
 EXPOSE 3004
 
 # Run the app using PM2
-CMD ["pm2-runtime", "ecosystem.config.js", "--env", ${NODE_ENV}]
+CMD ["pm2-runtime", "ecosystem.config.js", "--env", "${NODE_ENV}"]
