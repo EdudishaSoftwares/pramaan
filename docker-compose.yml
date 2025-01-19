@@ -33,8 +33,6 @@ services:
     volumes:
       - ./:/home/ubuntu/github_repos/pramaan
       - node_modules:/home/ubuntu/github_repos/pramaan/node_modules
-    environment:
-      - MONGO_URI=mongodb://host.docker.internal:27017/pramaan
     networks:
       - backend
     restart: 'unless-stopped'
@@ -50,8 +48,6 @@ services:
     volumes:
       - ./:/home/ubuntu/github_repos/pramaan
       - node_modules:/home/ubuntu/github_repos/pramaan/node_modules
-    environment:
-      - MONGO_URI=mongodb://host.docker.internal:27017/pramaan
     networks:
       - backend
     restart: 'unless-stopped'

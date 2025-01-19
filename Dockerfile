@@ -3,7 +3,9 @@ FROM node:18-alpine AS development-build-stage
 
 # Set environment variables
 ARG DOCKER_ENV
+ARG GITHUB_TOKEN
 ENV NODE_ENV=${DOCKER_ENV}
+ENV GITHUB_TOKEN=${GITHUB_TOKEN}
 
 # Validate NODE_ENV is provided
 RUN if [ -z "$NODE_ENV" ]; then echo "NODE_ENV not set" && exit 1; fi
@@ -25,7 +27,7 @@ RUN apk add git
 RUN npm install
 
 # Clone the secrets repository and checkout the specific branch based on DOCKER_ENV
-RUN git clone -b ${NODE_ENV} https://github.com/pratik-edu/secrets.git /tmp/config-repo
+RUN git clone -b ${NODE_ENV} https://${GITHUB_TOKEN}@github.com/pratik-edu/secrets.git /tmp/config-repo
 
 # Copy the app configuration file to the correct location
 RUN cp /tmp/config-repo/pramaan/config.json /home/ubuntu/github_repos/pramaan/src/config/config.${NODE_ENV}.json
