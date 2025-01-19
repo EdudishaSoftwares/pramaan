@@ -15,9 +15,6 @@ WORKDIR /home/ubuntu/github_repos/pramaan
 # Copy project files to the container (excluding node_modules and package-lock.json)
 COPY . /home/ubuntu/github_repos/pramaan
 
-# # Remove package-lock.json and node_modules to ensure a clean install
-# RUN rm -rf node_modules package-lock.json
-
 # Install PM2 globally
 RUN npm install pm2 -g
 
@@ -27,11 +24,17 @@ RUN apk add git
 # Install npm dependencies (fresh install after removing node_modules and package-lock.json)
 RUN npm install
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+# Clone the secrets repository and checkout the specific branch based on DOCKER_ENV
+RUN git clone -b ${NODE_ENV} https://github.com/pratik-edu/secrets.git /tmp/config-repo
 
-# Copy configuration files
-COPY config/* /home/ubuntu/github_repos/pramaan/src/config/
+# Copy the app configuration file to the correct location
+RUN cp /tmp/config-repo/pramaan/config.json /home/ubuntu/github_repos/pramaan/src/config/config.${NODE_ENV}.json
+
+# Copy the Nginx configuration file to the correct location
+RUN cp /tmp/config-repo/pramaan/nginx.conf /etc/nginx/nginx.conf
+
+# Clean up temporary files
+RUN rm -rf /tmp/config-repo
 
 # Create logs directory for PM2
 RUN mkdir -p logs
