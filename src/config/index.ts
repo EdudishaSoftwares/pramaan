@@ -6,8 +6,8 @@ import { IApmService, IConfigOptional, IDatabase, IEmailConfig, ISentry, IServer
  * Return all the config from this file only
  */
 
-const env = 'development';
-const isProduction = false;
+const env = process.env.NODE_ENV || 'development';
+const isProduction = env === 'production';
 const filePath = env === 'development' ? `src/config/config.${env}.json` : `dist/config/config.${env}.json`;
 
 nconf.argv().env().file({ file: filePath });
