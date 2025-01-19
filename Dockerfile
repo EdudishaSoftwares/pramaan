@@ -3,6 +3,7 @@ FROM node:18-alpine AS development-build-stage
 
 # Set environment variables
 ARG DOCKER_ENV
+ARG GITHUB_TOKEN
 ENV NODE_ENV=${DOCKER_ENV}
 
 # Validate NODE_ENV is provided
@@ -18,17 +19,20 @@ COPY . /home/ubuntu/github_repos/pramaan
 # Install PM2 globally
 RUN npm install pm2 -g
 
-# Install git for any required commands
-RUN apk add git
+# Install git and nginx for any required commands
+RUN apk add --no-cache git nginx
 
-# Install npm dependencies (fresh install after removing node_modules and package-lock.json)
+# Install npm dependencies
 RUN npm install
 
 # Clone the secrets repository and checkout the specific branch based on DOCKER_ENV
-RUN git clone -b ${NODE_ENV} https://github.com/pratik-edu/secrets.git /tmp/config-repo
+RUN git clone -b ${NODE_ENV} https://${GITHUB_TOKEN}@github.com/pratik-edu/secrets.git /tmp/config-repo
 
 # Copy the app configuration file to the correct location
 RUN cp /tmp/config-repo/pramaan/config.json /home/ubuntu/github_repos/pramaan/src/config/config.${NODE_ENV}.json
+
+# Create /etc/nginx directory if not already present
+RUN mkdir -p /etc/nginx
 
 # Copy the Nginx configuration file to the correct location
 RUN cp /tmp/config-repo/pramaan/nginx.conf /etc/nginx/nginx.conf
@@ -41,10 +45,6 @@ RUN mkdir -p logs
 
 # Build the application - THIS MUST COMPLETE BEFORE PM2 STARTS
 RUN npm run build
-
-# Verify the dist directory and server.js exist
-RUN ls -la dist && ls -la dist/server.js
-RUN ls -la src/config/config.${NODE_ENV}.json || echo "Config file missing!"
 
 # Expose the port your app listens to
 EXPOSE 3004
